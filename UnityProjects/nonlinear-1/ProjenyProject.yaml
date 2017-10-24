@@ -1,0 +1,8 @@
+AssetsFolder:
+- Scenes
+- Scripts
+ProjectSettingsPath: '[ProjectRoot]/ProjectSettings'
+SolutionProjects:
+- Scripts
+TargetPlatforms:
+- Windows

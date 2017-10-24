@@ -1,0 +1,3 @@
+PackageFolders:
+- '[SharedUnityPackagesDir]'
+- '[ProjectRoot]/Packages'
