@@ -2,6 +2,8 @@ AssetsFolder:
 - Scenes
 - Scripts
 ProjectSettingsPath: '[ProjectRoot]/ProjectSettings'
+PluginsFolder:
+- Zenject
 SolutionProjects:
 - Scripts
 TargetPlatforms:

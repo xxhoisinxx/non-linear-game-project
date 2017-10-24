@@ -94,8 +94,3 @@ PrjLog.txt
 *.meta linguist-generated
 *.prefab linguist-generated
 *.unity linguist-generated
-
-#Zenject
-*/Zenject/Documentation/
-*/Zenject/OptionalExtras/
-
