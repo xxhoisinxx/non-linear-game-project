@@ -351,6 +351,11 @@ Prefab:
       propertyPath: speedSettings.pulsationSpeed
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 114702009331560314, guid: 665457a0570289e45a0a84b8cfb2a579,
+        type: 2}
+      propertyPath: dimensionsSettings.numberOfSectors
+      value: 30
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 665457a0570289e45a0a84b8cfb2a579, type: 2}
   m_IsPrefabParent: 0
