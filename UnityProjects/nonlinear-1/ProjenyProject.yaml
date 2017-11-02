@@ -1,9 +1,12 @@
 AssetsFolder:
 - Scenes
 - Scripts
+- Materials
+- Prefabs
 ProjectSettingsPath: '[ProjectRoot]/ProjectSettings'
 PluginsFolder:
 - Zenject
+- 3DPrimitives
 SolutionProjects:
 - Scripts
 TargetPlatforms:
