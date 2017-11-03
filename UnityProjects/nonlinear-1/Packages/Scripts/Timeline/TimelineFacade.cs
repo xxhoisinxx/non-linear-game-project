@@ -17,11 +17,11 @@ namespace Scripts.SectoredCylinder {
     /// <summary>
     /// The sectored cylinder facade.
     /// </summary>
-    public class SectoredCylinderFacade : MonoBehaviour {
+    public class TimelineFacade : MonoBehaviour {
         /// <summary>
         /// The model.
         /// </summary>
-        private SectoredCylinder model;
+        private Timeline model;
 
         /// <summary>
         /// The construct.
@@ -30,7 +30,7 @@ namespace Scripts.SectoredCylinder {
         /// The model.
         /// </param>
         [Inject]
-        public void Construct(SectoredCylinder model) {
+        public void Construct(Timeline model) {
             this.model = model;
         }
     }

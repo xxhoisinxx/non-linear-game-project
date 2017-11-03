@@ -10,11 +10,10 @@ namespace _3DPrimitives {
 
     using Zenject;
 
-    /// <inheritdoc />
     /// <summary>
     /// The sector.
     /// </summary>
-    public class Sector : MonoBehaviour {
+    public class Sector {
         /// <summary>
         /// The depth.
         /// </summary>
@@ -39,6 +38,24 @@ namespace _3DPrimitives {
         /// The mesh collider.
         /// </summary>
         private MeshCollider meshCollider;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Sector"/> class.
+        /// </summary>
+        /// <param name="mf">
+        /// The mf.
+        /// </param>
+        /// <param name="mc">
+        /// The mc.
+        /// </param>
+        /// <param name="transform">
+        /// The transform.
+        /// </param>
+        public Sector(MeshFilter mf, MeshCollider mc, Transform transform) {
+            this.meshFilter = mf;
+            this.meshCollider = mc;
+            this.Transform = transform;
+        }
 
         /// <summary>
         /// Gets or sets the Depth.
@@ -185,25 +202,6 @@ namespace _3DPrimitives {
         }
 
         /// <summary>
-        /// The construct.
-        /// </summary>
-        /// <param name="mf">
-        /// The mf.
-        /// </param>
-        /// <param name="mc">
-        /// The mc.
-        /// </param>
-        /// <param name="transform">
-        /// The transform.
-        /// </param>
-        [Inject]
-        public void Construct(MeshFilter mf, MeshCollider mc, Transform transform) {
-            this.meshFilter = mf;
-            this.meshCollider = mc;
-            this.Transform = transform;
-        }
-
-        /// <summary>
         /// The attach mesh.
         /// </summary>
         private void AttachMesh() {
@@ -213,31 +211,22 @@ namespace _3DPrimitives {
         }
 
         /// <summary>
-        /// The pool.
+        /// The reinitialize.
         /// </summary>
-        public class Pool : MonoMemoryPool<float, float, int, Sector> {
-            /// <summary>
-            /// The reinitialize.
-            /// </summary>
-            /// <param name="depth">
-            /// The depth.
-            /// </param>
-            /// <param name="height">
-            /// The height.
-            /// </param>
-            /// <param name="slice">
-            /// The slice.
-            /// </param>
-            /// <param name="sector">
-            /// The sector.
-            /// </param>
-            protected override void Reinitialize(float depth, float height, int slice, Sector sector) {
-                sector.depth = depth;
-                sector.height = height;
-                sector.slice = slice;
-                sector.AttachMesh();
-            }
+        /// <param name="depth">
+        /// The depth.
+        /// </param>
+        /// <param name="height">
+        /// The height.
+        /// </param>
+        /// <param name="slice">
+        /// The slice.
+        /// </param>
+        public void Reinitialize(float depth, float height, int slice) {
+            this.depth = depth;
+            this.height = height;
+            this.slice = slice;
+            this.AttachMesh();
         }
-
     }
 }

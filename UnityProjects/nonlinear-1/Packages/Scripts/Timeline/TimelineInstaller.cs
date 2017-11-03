@@ -6,6 +6,8 @@
 namespace Scripts.SectoredCylinder {
     using System;
 
+    using Scripts.TimelinePiece;
+
     using UnityEngine;
 
     using Zenject;
@@ -15,42 +17,42 @@ namespace Scripts.SectoredCylinder {
     /// <summary>
     /// The sectored cylinder installer.
     /// </summary>
-    public class SectoredCylinderInstaller : MonoInstaller {
+    public class TimelineInstaller : MonoInstaller {
         /// <summary>
         /// The components settings.
         /// </summary>
         [SerializeField]
-        private SectoredCylinder.Settings.Components componentsSettings;
+        private Timeline.Settings.Components componentsSettings;
 
         /// <summary>
         /// The dimensions settings.
         /// </summary>
         [SerializeField]
-        private SectoredCylinder.Settings.Dimensions dimensionsSettings;
+        private Timeline.Settings.Dimensions dimensionsSettings;
 
         /// <summary>
         /// The radius settings.
         /// </summary>
         [SerializeField]
-        private SectoredCylinder.Settings.Radius radiusSettings;
+        private Timeline.Settings.Radius radiusSettings;
 
         /// <summary>
         /// The speed settings.
         /// </summary>
         [SerializeField]
-        private SectoredCylinder.Settings.Speeds speedSettings;
+        private Timeline.Settings.Speeds speedSettings;
 
         /// <summary>
         /// The install bindings.
         /// </summary>
         public override void InstallBindings() {
-            this.Container.BindInterfacesAndSelfTo<SectoredCylinder>().AsSingle();
-            this.Container.Bind<SectoredCylinder.Settings.Components>().FromInstance(this.componentsSettings);
-            this.Container.Bind<SectoredCylinder.Settings.Dimensions>().FromInstance(this.dimensionsSettings);
-            this.Container.Bind<SectoredCylinder.Settings.Radius>().FromInstance(this.radiusSettings);
-            this.Container.Bind<SectoredCylinder.Settings.Speeds>().FromInstance(this.speedSettings);
-            this.Container.BindMemoryPool<Sector, Sector.Pool>().WithInitialSize(this.dimensionsSettings.NumberOfSectors)
-                .FromSubContainerResolve().ByNewPrefab(this.componentsSettings.SectorGameObject);
+            this.Container.BindInterfacesAndSelfTo<Timeline>().AsSingle();
+            this.Container.Bind<Timeline.Settings.Components>().FromInstance(this.componentsSettings);
+            this.Container.Bind<Timeline.Settings.Dimensions>().FromInstance(this.dimensionsSettings);
+            this.Container.Bind<Timeline.Settings.Radius>().FromInstance(this.radiusSettings);
+            this.Container.Bind<Timeline.Settings.Speeds>().FromInstance(this.speedSettings);
+            this.Container.BindMemoryPool<TimelinePiece, TimelinePiece.Pool>().WithInitialSize(this.dimensionsSettings.NumberOfSectors)
+                .FromSubContainerResolve().ByNewPrefab(this.componentsSettings.TimelineGameObject);
         }
 
         /// <summary>
@@ -76,11 +78,11 @@ namespace Scripts.SectoredCylinder {
             if (this.Container == null || this.Container.IsInstalling || this.Container.IsValidating) {
                 return;
             }
-            this.Container.Resolve<SectoredCylinder>().UniformSectorHeight =
+            this.Container.Resolve<Timeline>().UniformSectorHeight =
                 this.dimensionsSettings.UniformSectorHeight;
-            this.Container.Resolve<SectoredCylinder>().UniformSectorDepth =
+            this.Container.Resolve<Timeline>().UniformSectorDepth =
                 this.dimensionsSettings.UniformSectorDepth;
-            this.Container.Resolve<SectoredCylinder>().NumSectors =
+            this.Container.Resolve<Timeline>().NumSectors =
                 this.dimensionsSettings.NumberOfSectors;
         }
     }

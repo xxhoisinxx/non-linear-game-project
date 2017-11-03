@@ -1,25 +1,16 @@
-﻿/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Memes are Dreams Studios. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace _3DPrimitives {
-    using JetBrains.Annotations;
+﻿namespace Scripts.TimelinePiece {
+    using System;
 
     using UnityEngine;
+
+    using _3DPrimitives;
 
     using Zenject;
 
     /// <summary>
-    /// The sector installer.
+    /// The timeline piece installer.
     /// </summary>
-    public class SectorInstaller : MonoInstaller {
+    public class TimelinePieceInstaller : MonoInstaller {
         /// <summary>
         /// The settings.
         /// </summary>
@@ -30,6 +21,7 @@ namespace _3DPrimitives {
         /// The install bindings.
         /// </summary>
         public override void InstallBindings() {
+            this.Container.Bind<Sector>().AsSingle();
             this.Container.Bind<MeshFilter>().FromInstance(this.settings.MeshFilter);
             this.Container.Bind<MeshCollider>().FromInstance(this.settings.MeshCollider);
             this.Container.Bind<Transform>().FromInstance(this.settings.Transform);

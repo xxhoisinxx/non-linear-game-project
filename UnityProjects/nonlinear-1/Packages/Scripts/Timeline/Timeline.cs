@@ -11,16 +11,18 @@ namespace Scripts.SectoredCylinder {
 
     using UnityEngine;
 
+    using TimelinePiece;
+
     using Zenject;
 
     /// <summary>
     /// The sectored cylinder.
     /// </summary>
-    public class SectoredCylinder : IInitializable, ITickable {
+    public class Timeline : IInitializable, ITickable {
         /// <summary>
-        /// The sectors.
+        /// The timeline Pieces.
         /// </summary>
-        private readonly Stack<Sector> sectors;
+        private readonly Stack<TimelinePiece> timelinePieces;
 
         /// <summary>
         /// The component settings.
@@ -60,17 +62,17 @@ namespace Scripts.SectoredCylinder {
         /// The sector factory.
         /// </summary>
         [Inject]
-        private Sector.Pool sectorFactory;
+        private TimelinePiece.Pool timelineFactory;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SectoredCylinder"/> class.
+        /// Initializes a new instance of the <see cref="Timeline"/> class.
         /// </summary>
-        public SectoredCylinder() {
-            this.sectors = new Stack<Sector>();
+        public Timeline() {
+            this.timelinePieces = new Stack<TimelinePiece>();
         }
 
         /// <summary>
-        /// Gets or sets the number sectors.
+        /// Gets or sets the number timelinePieces.
         /// </summary>
         public int NumSectors {
             get {
@@ -78,28 +80,28 @@ namespace Scripts.SectoredCylinder {
             }
 
             set {
-                var diff = Mathf.Abs(value - this.sectors.Count);
-                if (value > this.sectors.Count) {
+                var diff = Mathf.Abs(value - this.timelinePieces.Count);
+                if (value > this.timelinePieces.Count) {
                     for (var i = 0; i < diff; i++) {
-                        this.sectors.Push(this.sectorFactory.Spawn(
+                        this.timelinePieces.Push(this.timelineFactory.Spawn(
                             this.dimensionsSettings.UniformSectorDepth,
                             this.dimensionsSettings.UniformSectorHeight,
                             this.dimensionsSettings.NumberOfSectors));
                     }
                 }
-                else if (value < this.sectors.Count) {
+                else if (value < this.timelinePieces.Count) {
                     for (var i = 0; i < diff; i++) {
-                        this.sectorFactory.Despawn(this.sectors.Pop());
+                        this.timelineFactory.Despawn(this.timelinePieces.Pop());
                     }
                 }
                 this.dimensionsSettings.NumberOfSectors = value;
                 var counter = 0;
-                foreach (var sector in this.sectors) {
-                    sector.Slice = value;
-                    sector.Transform.localPosition = Vector3.zero;
-                    sector.Transform.localRotation = Quaternion.identity;
-                    sector.Transform.Rotate(this.Transform.up, counter * 360.0f / this.dimensionsSettings.NumberOfSectors);
-                    sector.Transform.Translate(sector.Transform.forward * this.Radius);
+                foreach (var piece in this.timelinePieces) {
+                    piece.Sector.Slice = value;
+                    piece.Sector.Transform.localPosition = Vector3.zero;
+                    piece.Sector.Transform.localRotation = Quaternion.identity;
+                    piece.Sector.Transform.Rotate(this.Transform.up, counter * 360.0f / this.dimensionsSettings.NumberOfSectors);
+                    piece.Sector.Transform.Translate(piece.Sector.Transform.forward * this.Radius);
                     counter++;
                 }
             }
@@ -115,8 +117,8 @@ namespace Scripts.SectoredCylinder {
 
             set {
                 this.dimensionsSettings.UniformSectorDepth = value;
-                foreach (var sector in this.sectors) {
-                    sector.Depth = value;
+                foreach (var piece in this.timelinePieces) {
+                    piece.Sector.Depth = value;
                 }
             }
         }
@@ -131,8 +133,8 @@ namespace Scripts.SectoredCylinder {
 
             set {
                 this.dimensionsSettings.UniformSectorHeight = value;
-                foreach (var sector in this.sectors) {
-                    sector.Height = value;
+                foreach (var piece in this.timelinePieces) {
+                    piece.Sector.Height = value;
                 }
             }
         }
@@ -187,10 +189,10 @@ namespace Scripts.SectoredCylinder {
             private set {
                 var oldRadius = this.radius;
                 this.radius = Mathf.Clamp(value, this.MinRadius, this.MaxRadius);
-                foreach (var sector in this.sectors) {
-                    Debug.DrawRay(sector.Transform.position, sector.Transform.forward * 10, Color.red);
-                    sector.Transform.localPosition = Vector3.zero;
-                    sector.Transform.Translate(sector.Transform.forward * this.radius, Space.World);
+                foreach (var piece in this.timelinePieces) {
+                    Debug.DrawRay(piece.Sector.Transform.position, piece.Sector.Transform.forward * 10, Color.red);
+                    piece.Sector.Transform.localPosition = Vector3.zero;
+                    piece.Sector.Transform.Translate(piece.Sector.Transform.forward * this.radius, Space.World);
                 }
             }
         }
@@ -230,13 +232,13 @@ namespace Scripts.SectoredCylinder {
                 this.MaxRadius,
                 this.Radius / (this.MaxRadius - this.MinRadius));
             for (var i = 0; i < this.dimensionsSettings.NumberOfSectors; i++) {
-                var sector = this.sectorFactory.Spawn(
+                var piece = this.timelineFactory.Spawn(
                     this.dimensionsSettings.UniformSectorDepth,
                     this.dimensionsSettings.UniformSectorHeight,
                     this.dimensionsSettings.NumberOfSectors);
-                sector.Transform.Rotate(this.Transform.up, i * 360.0f / this.dimensionsSettings.NumberOfSectors);
-                sector.Transform.Translate(sector.Transform.forward * this.Radius);
-                this.sectors.Push(sector);
+                piece.Sector.Transform.Rotate(this.Transform.up, i * 360.0f / this.dimensionsSettings.NumberOfSectors);
+                piece.Sector.Transform.Translate(piece.Sector.Transform.forward * this.Radius);
+                this.timelinePieces.Push(piece);
             }
         }
 
@@ -263,7 +265,7 @@ namespace Scripts.SectoredCylinder {
                 /// The game object.
                 /// </summary>
                 [SerializeField]
-                private GameObject sectorGameObject;
+                private GameObject timelineGameObject;
 
                 /// <summary>
                 /// The transform.
@@ -274,13 +276,13 @@ namespace Scripts.SectoredCylinder {
                 /// <summary>
                 /// Gets or sets the game object.
                 /// </summary>
-                internal GameObject SectorGameObject {
+                internal GameObject TimelineGameObject {
                     get {
-                        return this.sectorGameObject;
+                        return this.timelineGameObject;
                     }
 
                     set {
-                        this.sectorGameObject = value;
+                        this.timelineGameObject = value;
                     }
                 }
 
@@ -304,7 +306,7 @@ namespace Scripts.SectoredCylinder {
             [Serializable]
             internal class Dimensions {
                 /// <summary>
-                /// The number of sectors.
+                /// The number of timelinePieces.
                 /// </summary>
                 [SerializeField]
                 private int numberOfSectors;
@@ -322,7 +324,7 @@ namespace Scripts.SectoredCylinder {
                 private float uniformSectorHeight;
 
                 /// <summary>
-                /// Gets or sets the number of sectors.
+                /// Gets or sets the number of timelinePieces.
                 /// </summary>
                 internal int NumberOfSectors {
                     get {
