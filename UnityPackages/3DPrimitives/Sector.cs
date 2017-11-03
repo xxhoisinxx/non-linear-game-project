@@ -93,57 +93,90 @@ namespace _3DPrimitives {
         public Mesh Mesh {
             get {
                 var height = this.Height / 2;
+                var points = new[]
+                {
+                    Matrix4x4.Rotate(Quaternion.Euler(0, -180.0f / this.Slice, 0))
+                        .MultiplyPoint3x4(new Vector3(0, height, 0)),
+                    Matrix4x4.Rotate(Quaternion.Euler(0, -180.0f / this.Slice, 0))
+                        .MultiplyPoint3x4(new Vector3(0, height, this.Depth)),
+                    Matrix4x4.Rotate(Quaternion.Euler(0, 180.0f / this.Slice, 0))
+                        .MultiplyPoint3x4(new Vector3(0, height, this.Depth)),
+                    Matrix4x4.Rotate(Quaternion.Euler(0, -180.0f / this.Slice, 0))
+                        .MultiplyPoint3x4(new Vector3(0, -height, this.Depth)),
+                    Matrix4x4.Rotate(Quaternion.Euler(0, -180.0f / this.Slice, 0))
+                        .MultiplyPoint3x4(new Vector3(0, -height, 0)),
+                    Matrix4x4.Rotate(Quaternion.Euler(0, 180.0f / this.Slice, 0))
+                        .MultiplyPoint3x4(new Vector3(0, -height, this.Depth)),
+                };
                 return new Mesh {
                     vertices = new[]
                     {
-                        Matrix4x4.Rotate(Quaternion.Euler(0, -180.0f / this.slice, 0))
-                            .MultiplyPoint3x4(new Vector3(0, height, 0)),
-                        Matrix4x4.Rotate(Quaternion.Euler(0, -180.0f / this.slice, 0))
-                            .MultiplyPoint3x4(new Vector3(0, height, this.depth)),
-                        Matrix4x4.Rotate(Quaternion.Euler(0, 180.0f / this.Slice, 0))
-                            .MultiplyPoint3x4(new Vector3(0, height, this.Depth)),
-                        Matrix4x4.Rotate(Quaternion.Euler(0, -180.0f / this.slice, 0))
-                            .MultiplyPoint3x4(new Vector3(0, height, this.depth)),
-                        Matrix4x4.Rotate(Quaternion.Euler(0, -180.0f / this.slice, 0))
-                            .MultiplyPoint3x4(new Vector3(0, height, 0)),
-                        Matrix4x4.Rotate(Quaternion.Euler(0, -180.0f / this.slice, 0))
-                            .MultiplyPoint3x4(new Vector3(0, -height, this.Depth)),
-                        Matrix4x4.Rotate(Quaternion.Euler(0, -180.0f / this.slice, 0))
-                            .MultiplyPoint3x4(new Vector3(0, -height, this.Depth)),
-                        Matrix4x4.Rotate(Quaternion.Euler(0, -180.0f / this.slice, 0))
-                            .MultiplyPoint3x4(new Vector3(0, height, 0)),
-                        Matrix4x4.Rotate(Quaternion.Euler(0, -180.0f / this.slice, 0))
-                            .MultiplyPoint3x4(new Vector3(0, -height, 0)),
-                        Matrix4x4.Rotate(Quaternion.Euler(0, -180.0f / this.slice, 0))
-                            .MultiplyPoint3x4(new Vector3(0, height, 0)),
-                        Matrix4x4.Rotate(Quaternion.Euler(0, 180.0f / this.Slice, 0))
-                            .MultiplyPoint3x4(new Vector3(0, height, this.Depth)),
-                        Matrix4x4.Rotate(Quaternion.Euler(0, -180.0f / this.slice, 0))
-                            .MultiplyPoint3x4(new Vector3(0, -height, 0)),
-                        Matrix4x4.Rotate(Quaternion.Euler(0, -180.0f / this.slice, 0))
-                            .MultiplyPoint3x4(new Vector3(0, -height, 0)),
-                        Matrix4x4.Rotate(Quaternion.Euler(0, 180.0f / this.Slice, 0))
-                            .MultiplyPoint3x4(new Vector3(0, height, this.Depth)),
-                        Matrix4x4.Rotate(Quaternion.Euler(0, 180.0f / this.Slice, 0))
-                            .MultiplyPoint3x4(new Vector3(0, -height, this.Depth)),
-                        Matrix4x4.Rotate(Quaternion.Euler(0, -180.0f / this.slice, 0))
-                            .MultiplyPoint3x4(new Vector3(0, -height, 0)),
-                        Matrix4x4.Rotate(Quaternion.Euler(0, 180.0f / this.Slice, 0))
-                            .MultiplyPoint3x4(new Vector3(0, -height, this.Depth)),
-                        Matrix4x4.Rotate(Quaternion.Euler(0, -180.0f / this.slice, 0))
-                            .MultiplyPoint3x4(new Vector3(0, -height, this.Depth)),
-                        Matrix4x4.Rotate(Quaternion.Euler(0, 180.0f / this.Slice, 0))
-                            .MultiplyPoint3x4(new Vector3(0, -height, this.Depth)),
-                        Matrix4x4.Rotate(Quaternion.Euler(0, 180.0f / this.Slice, 0))
-                            .MultiplyPoint3x4(new Vector3(0, height, this.Depth)),
-                        Matrix4x4.Rotate(Quaternion.Euler(0, -180.0f / this.slice, 0))
-                            .MultiplyPoint3x4(new Vector3(0, height, this.depth)),
-                        Matrix4x4.Rotate(Quaternion.Euler(0, 180.0f / this.Slice, 0))
-                            .MultiplyPoint3x4(new Vector3(0, -height, this.Depth)),
-                        Matrix4x4.Rotate(Quaternion.Euler(0, -180.0f / this.slice, 0))
-                            .MultiplyPoint3x4(new Vector3(0, height, this.depth)),
-                        Matrix4x4.Rotate(Quaternion.Euler(0, -180.0f / this.slice, 0))
-                            .MultiplyPoint3x4(new Vector3(0, -height, this.Depth)),
+                        points[0],
+                        points[1],
+                        points[2],
+                        ////////////////////////////////////////////////////////////////////
+                        points[1],
+                        points[0],
+                        points[3],
+                        ////////////////////////////////////////////////////////////////////
+                        points[3],
+                        points[0],
+                        points[4],
+                        ////////////////////////////////////////////////////////////////////
+                        points[0],
+                        points[2],
+                        points[4],
+                        ////////////////////////////////////////////////////////////////////
+                        points[4],
+                        points[2],
+                        points[5],
+                        ////////////////////////////////////////////////////////////////////
+                        points[4],
+                        points[5],
+                        points[3],
+                        ////////////////////////////////////////////////////////////////////
+                        points[5],
+                        points[2],
+                        points[1],
+                        /////////////////////////////////////////////////////////////////////
+                        points[5],
+                        points[1],
+                        points[3],
+                        ///////////////////////////////////////////////////////////////////
+                    },
+                    uv = new[]
+                    {
+                        new Vector2(0.497f, 0.856f),
+                        new Vector2(0.742f, 0.998f),
+                        new Vector2(0.497f, 0.573f),
+                        ////////////////////////////////////////////////////////////////////
+                        new Vector2(0.435f, 0.569f),
+                        new Vector2(0.68f, 0.569f),
+                        new Vector2(0.435f, 0.002f),
+                        ////////////////////////////////////////////////////////////////////
+                        new Vector2(0.68f, 0.002f),
+                        new Vector2(0.68f, 0.569f),
+                        new Vector2(0.435f, 0.002f),
+                        ////////////////////////////////////////////////////////////////////
+                        new Vector2(0.687f, 0.569f),
+                        new Vector2(0.972f, 0.569f),
+                        new Vector2(0.687f, 0.002f),
+                        ////////////////////////////////////////////////////////////////////
+                        new Vector2(0.687f, 0.002f),
+                        new Vector2(0.972f, 0.569f),
+                        new Vector2(0.971f, 0.002f),
+                        ////////////////////////////////////////////////////////////////////
+                        new Vector2(0.994f, 0.856f),
+                        new Vector2(0.994f, 0.573f),
+                        new Vector2(0.748f, 0.998f),
+                        ////////////////////////////////////////////////////////////////////
+                        new Vector2(0.427f, 0.569f),
+                        new Vector2(0.427f, 0.002f),
+                        new Vector2(0.002f, 0.002f),
+                        ////////////////////////////////////////////////////////////////////
+                        new Vector2(0.427f, 0.569f),
+                        new Vector2(0.002f, 0.002f),
+                        new Vector2(0.002f, 0.569f),
                     },
                     triangles = new[]
                         { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 }
