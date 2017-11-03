@@ -1,12 +1,14 @@
 AssetsFolder:
-- Scenes
 - Scripts
-- Materials
+- Scenes
 - Prefabs
+- Materials
 ProjectSettingsPath: '[ProjectRoot]/ProjectSettings'
 PluginsFolder:
-- Zenject
 - 3DPrimitives
+- Editor
+- Zenject
+- UniRx
 SolutionProjects:
 - Scripts
 TargetPlatforms:
