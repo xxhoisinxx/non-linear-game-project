@@ -11,7 +11,7 @@
     /// <summary>
     /// The player movement handler.
     /// </summary>
-    public class PlayerMovementHandler : IInitializable, IFixedTickable {
+    public class PlayerMovementHandler : IInitializable, IFixedTickable, IDisposable {
         /// <summary>
         /// The rigid body.
         /// </summary>
@@ -44,7 +44,6 @@
         /// The fixed tick.
         /// </summary>
         public void FixedTick() {
-            Debug.Log(Vector3.Distance(Camera.main.transform.position, this.lastHit.point));
             Debug.DrawRay(Camera.main.transform.position, (this.lastHit.point - Camera.main.transform.position).normalized * Vector3.Distance(Camera.main.transform.position, this.lastHit.point), Color.red);
             if (!Input.GetMouseButtonDown(0)) {
                 return;
@@ -82,6 +81,11 @@
             yield break;
         }
 
-
+        /// <summary>
+        /// The dispose.
+        /// </summary>
+        public void Dispose() {
+            this.movementCoroutine?.Dispose();
+        }
     }
 }

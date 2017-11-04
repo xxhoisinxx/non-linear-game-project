@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 namespace _3DPrimitives {
+    using System;
     using System.Collections.Generic;
 
     using UnityEngine;
@@ -13,7 +14,17 @@ namespace _3DPrimitives {
     /// <summary>
     /// The sector.
     /// </summary>
-    public class Sector {
+    public class Sector : IEquatable<Sector> {
+        /// <summary>
+        /// The mesh filter.
+        /// </summary>
+        private readonly MeshFilter meshFilter;
+
+        /// <summary>
+        /// The mesh collider.
+        /// </summary>
+        private readonly MeshCollider meshCollider;
+
         /// <summary>
         /// The depth.
         /// </summary>
@@ -28,16 +39,6 @@ namespace _3DPrimitives {
         /// The slice.
         /// </summary>
         private int slice;
-
-        /// <summary>
-        /// The mesh filter.
-        /// </summary>
-        private MeshFilter meshFilter;
-
-        /// <summary>
-        /// The mesh collider.
-        /// </summary>
-        private MeshCollider meshCollider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Sector"/> class.
@@ -94,15 +95,15 @@ namespace _3DPrimitives {
             }
 
             set {
-                this.slice = value;
+                this.slice = Mathf.Clamp(value, 3, int.MaxValue);
                 this.AttachMesh();
             }
         }
 
         /// <summary>
-        /// Gets or sets the transform.
+        /// Gets the transform.
         /// </summary>
-        public Transform Transform { get; set; }
+        public Transform Transform { get; }
 
         /// <summary>
         /// Gets the mesh.
@@ -201,13 +202,47 @@ namespace _3DPrimitives {
             }
         }
 
+        public static bool operator ==(Sector sector1, Sector sector2) => EqualityComparer<Sector>.Default.Equals(sector1, sector2);
+
+        public static bool operator !=(Sector sector1, Sector sector2) => !(sector1 == sector2);
+
+        public override bool Equals(object obj) {
+            if (ReferenceEquals(null, obj)) {
+                return false;
+            }
+            if (ReferenceEquals(this, obj)) {
+                return true;
+            }
+            return obj.GetType() == this.GetType() && this.Equals((Sector)obj);
+        }
+
+        public bool Equals(Sector other) {
+            if (ReferenceEquals(null, other)) {
+                return false;
+            }
+            if (ReferenceEquals(this, other)) {
+                return true;
+            }
+            return Math.Abs(this.Depth - other.Depth) < float.Epsilon
+                   && Math.Abs(this.Height - other.Height) < float.Epsilon
+                   && this.Slice == other.Slice
+                   && this.meshFilter == other.meshFilter
+                   && this.meshCollider == other.meshCollider
+                   && this.Transform == other.Transform;
+        }
+
         /// <summary>
-        /// The attach mesh.
+        /// The get hash code.
         /// </summary>
-        private void AttachMesh() {
-            var mesh = this.Mesh;
-            this.meshFilter.sharedMesh = mesh;
-            this.meshCollider.sharedMesh = mesh;
+        /// <returns>
+        /// The <see cref="int"/>.
+        /// </returns>
+        public override int GetHashCode() {
+            var hashCode = -313245439;
+            hashCode = (hashCode * -1521134295) + EqualityComparer<MeshFilter>.Default.GetHashCode(this.meshFilter);
+            hashCode = (hashCode * -1521134295) + EqualityComparer<MeshCollider>.Default.GetHashCode(this.meshCollider);
+            hashCode = (hashCode * -1521134295) + EqualityComparer<Transform>.Default.GetHashCode(this.Transform);
+            return hashCode;
         }
 
         /// <summary>
@@ -227,6 +262,15 @@ namespace _3DPrimitives {
             this.height = height;
             this.slice = slice;
             this.AttachMesh();
+        }
+
+        /// <summary>
+        /// The attach mesh.
+        /// </summary>
+        private void AttachMesh() {
+            var mesh = this.Mesh;
+            this.meshFilter.sharedMesh = mesh;
+            this.meshCollider.sharedMesh = mesh;
         }
     }
 }

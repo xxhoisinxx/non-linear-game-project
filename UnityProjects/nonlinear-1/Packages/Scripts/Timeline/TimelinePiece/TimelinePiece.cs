@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+namespace Scripts.Timeline.TimelinePiece {
+    using System;
 
-namespace Scripts.TimelinePiece {
     using UnityEngine;
 
     using Zenject;
@@ -14,22 +10,64 @@ namespace Scripts.TimelinePiece {
     /// <summary>
     /// The timeline piece.
     /// </summary>
-    public class TimelinePiece : MonoBehaviour {
+    public class TimelinePiece : MonoBehaviour, IEquatable<TimelinePiece> {
         /// <summary>
         /// Gets the model.
         /// </summary>
-        public Sector Sector { get; private set; }
+        [Inject]
+        public Sector Sector { get; }
+
+        /// <summary>
+        /// Gets or sets the layer.
+        /// </summary>
+        public int DefaultLayer { get; set; }
 
         /// <summary>
         /// The construct.
         /// </summary>
-        /// <param name="sector">
-        /// The Sector.
+        /// <param name="Layer">
+        /// The layer.
         /// </param>
         [Inject]
-        public void Construct(Sector sector) {
-            this.Sector = sector;
+        public void Construct(int Layer) {
+            this.DefaultLayer = Layer;
         }
+
+        public bool Equals(TimelinePiece other) {
+            if (object.ReferenceEquals(null, other)) {
+                return false;
+            }
+            if (object.ReferenceEquals(this, other)) {
+                return true;
+            }
+            return base.Equals(other) && object.Equals(this.Sector, other.Sector);
+        }
+
+        public override bool Equals(object obj) {
+            if (object.ReferenceEquals(null, obj)) {
+                return false;
+            }
+            if (object.ReferenceEquals(this, obj)) {
+                return true;
+            }
+            return obj.GetType() == this.GetType() && this.Equals((TimelinePiece)obj);
+        }
+
+        /// <summary>
+        /// The get hash code.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="int"/>.
+        /// </returns>
+        public override int GetHashCode() {
+            unchecked {
+                return (base.GetHashCode() * 397) ^ (this.Sector != null ? this.Sector.GetHashCode() : 0);
+            }
+        }
+
+        public static bool operator ==(TimelinePiece left, TimelinePiece right) => Equals(left, right);
+
+        public static bool operator !=(TimelinePiece left, TimelinePiece right) => !Equals(left, right);
 
         /// <summary>
         /// The pool.
@@ -52,6 +90,7 @@ namespace Scripts.TimelinePiece {
             /// </param>
             protected override void Reinitialize(float depth, float height, int slice, TimelinePiece piece) {
                 piece.Sector.Reinitialize(depth, height, slice);
+                piece.Sector.Transform.gameObject.layer = piece.DefaultLayer;
             }
         }
     }
