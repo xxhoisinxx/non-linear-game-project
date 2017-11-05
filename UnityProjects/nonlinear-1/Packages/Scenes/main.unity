@@ -195,48 +195,23 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 114154516922499026, guid: ab193b4de80c79c45b0b6205acf8d919,
         type: 2}
-      propertyPath: dimensionsSettings.numberOfSectors
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 114154516922499026, guid: ab193b4de80c79c45b0b6205acf8d919,
-        type: 2}
-      propertyPath: dimensionsSettings.uniformSectorDepth.value
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 114154516922499026, guid: ab193b4de80c79c45b0b6205acf8d919,
-        type: 2}
-      propertyPath: dimensionsSettings.uniformSectorHeight.value
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114154516922499026, guid: ab193b4de80c79c45b0b6205acf8d919,
-        type: 2}
-      propertyPath: radiusSettings.maxRadius.value
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 114154516922499026, guid: ab193b4de80c79c45b0b6205acf8d919,
-        type: 2}
       propertyPath: dimensionsSettings.numberOfTimelinePieces.value
-      value: 12
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 114154516922499026, guid: ab193b4de80c79c45b0b6205acf8d919,
         type: 2}
       propertyPath: speedSettings.rotationSpeed.value
-      value: 30
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114154516922499026, guid: ab193b4de80c79c45b0b6205acf8d919,
         type: 2}
       propertyPath: speedSettings.pulsationSpeed.value
-      value: 0.05
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114154516922499026, guid: ab193b4de80c79c45b0b6205acf8d919,
         type: 2}
-      propertyPath: radiusSettings.minRadius.value
+      propertyPath: radiusSettings.maxRadius.value
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114154516922499026, guid: ab193b4de80c79c45b0b6205acf8d919,
-        type: 2}
-      propertyPath: radiusSettings.currentRadius.value
-      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ab193b4de80c79c45b0b6205acf8d919, type: 2}
@@ -404,7 +379,7 @@ GameObject:
   - component: {fileID: 1824160965}
   - component: {fileID: 1824160964}
   - component: {fileID: 1824160963}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}

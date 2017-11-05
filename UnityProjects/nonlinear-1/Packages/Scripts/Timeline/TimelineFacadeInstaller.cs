@@ -47,7 +47,7 @@ namespace Scripts.Timeline {
             this.Container.Bind<Timeline.Settings.Speeds>().FromInstance(this.speedSettings);
             this.Container.BindMemoryPool<TimelinePiece.TimelinePiece, TimelinePiece.TimelinePiece.Pool>().WithInitialSize(
                 this.dimensionsSettings.NumberOfTimelinePieces.Value)
-                .FromSubContainerResolve().ByNewPrefab(this.componentsSettings.TimelineGameObject);
+                .FromSubContainerResolve().ByNewPrefab(this.componentsSettings.TimelinePieceGameObject);
 
             this.Container.Bind<TimelinePiece.TimelinePieceNode>().AsSingle();
             this.Container.BindInterfacesAndSelfTo<PiecePickUpHandler>().AsSingle().WithArguments("Timeline_Piece");

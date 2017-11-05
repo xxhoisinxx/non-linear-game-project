@@ -25,6 +25,7 @@
             this.Container.Bind<MeshFilter>().FromInstance(this.settings.MeshFilter);
             this.Container.Bind<MeshCollider>().FromInstance(this.settings.MeshCollider);
             this.Container.Bind<Transform>().FromInstance(this.settings.Transform);
+            this.Container.Bind<MeshRenderer>().FromInstance(this.settings.MeshRenderer);
             this.Container.Bind<int>().FromInstance(this.settings.Layer);
         }
 
@@ -50,6 +51,9 @@
             /// </summary>
             [SerializeField]
             private Transform transform;
+
+            [SerializeField]
+            private MeshRenderer meshRenderer;
 
             [SerializeField]
             private int layer;
@@ -84,6 +88,12 @@
             public int Layer {
                 get {
                     return this.layer;
+                }
+            }
+
+            public MeshRenderer MeshRenderer {
+                get {
+                    return this.meshRenderer;
                 }
             }
         }

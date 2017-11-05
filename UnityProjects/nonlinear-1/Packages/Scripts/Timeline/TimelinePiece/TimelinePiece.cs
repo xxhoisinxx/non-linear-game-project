@@ -6,6 +6,9 @@ namespace Scripts.Timeline.TimelinePiece {
     using Zenject;
 
     using _3DPrimitives;
+    using System.Collections.Generic;
+
+    using Random = UnityEngine.Random;
 
     /// <summary>
     /// The timeline piece.
@@ -17,21 +20,25 @@ namespace Scripts.Timeline.TimelinePiece {
         [Inject]
         public Sector Sector { get; }
 
+        public MeshRenderer MeshRenderer { get; private set; }
+
         /// <summary>
         /// Gets or sets the layer.
         /// </summary>
-        public int DefaultLayer { get; set; }
+        public static int DefaultLayer { get; private set; }
 
-        /// <summary>
-        /// The construct.
-        /// </summary>
-        /// <param name="Layer">
-        /// The layer.
-        /// </param>
         [Inject]
-        public void Construct(int Layer) {
-            this.DefaultLayer = Layer;
+        private void Construct(int layer, MeshRenderer meshRenderer) {
+            DefaultLayer = layer;
+            this.MeshRenderer = meshRenderer;
+
         }
+
+        protected void Awake() {
+            this.MeshRenderer.material.color = new Color(Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f));
+        }
+
+        public bool IsActive { get; set; }
 
         public bool Equals(TimelinePiece other) {
             if (object.ReferenceEquals(null, other)) {
@@ -40,7 +47,7 @@ namespace Scripts.Timeline.TimelinePiece {
             if (object.ReferenceEquals(this, other)) {
                 return true;
             }
-            return base.Equals(other) && object.Equals(this.Sector, other.Sector);
+            return this.Sector == other.Sector;
         }
 
         public override bool Equals(object obj) {
@@ -53,16 +60,11 @@ namespace Scripts.Timeline.TimelinePiece {
             return obj.GetType() == this.GetType() && this.Equals((TimelinePiece)obj);
         }
 
-        /// <summary>
-        /// The get hash code.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="int"/>.
-        /// </returns>
         public override int GetHashCode() {
-            unchecked {
-                return (base.GetHashCode() * 397) ^ (this.Sector != null ? this.Sector.GetHashCode() : 0);
-            }
+            var hashCode = 749113007;
+            hashCode = hashCode * -1521134295 + base.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<Sector>.Default.GetHashCode(this.Sector);
+            return hashCode;
         }
 
         public static bool operator ==(TimelinePiece left, TimelinePiece right) => Equals(left, right);
@@ -90,7 +92,23 @@ namespace Scripts.Timeline.TimelinePiece {
             /// </param>
             protected override void Reinitialize(float depth, float height, int slice, TimelinePiece piece) {
                 piece.Sector.Reinitialize(depth, height, slice);
-                piece.Sector.Transform.gameObject.layer = piece.DefaultLayer;
+                piece.Sector.Transform.gameObject.layer = TimelinePiece.DefaultLayer;
+                piece.IsActive = true;
+            }
+
+            protected override void OnCreated(TimelinePiece piece) {
+                base.OnCreated(piece);
+                piece.IsActive = false;
+            }
+
+            protected override void OnSpawned(TimelinePiece piece) {
+                base.OnSpawned(piece);
+                piece.IsActive = true;
+            }
+
+            protected override void OnDespawned(TimelinePiece piece) {
+                base.OnDespawned(piece);
+                piece.IsActive = false;
             }
         }
     }

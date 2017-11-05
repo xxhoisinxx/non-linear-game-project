@@ -43,15 +43,29 @@ namespace Scripts.Timeline {
             if (Input.GetMouseButton(0) || this.pickedUpPiece.Piece == null) {
                 return;
             }
-            this.timeline.InsertLast(this.pickedUpPiece.Piece);
+
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-/*            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 100.0f) && hit.transform.gameObject.CompareTag(this.tag)) {
-                Debug.Log("INTERSECTION!");
-                return;
-            }*/
-            Debug.Log("Remove");
-            this.pickedUpPiece.Piece.transform.gameObject.layer = this.pickedUpPiece.Piece.DefaultLayer;
+            this.timeline.ReactivatePiece(this.pickedUpPiece.Piece);
+            RaycastHit hit;
+            Debug.DrawLine(ray.origin, ray.direction * 100.0f, Color.cyan, 10);
+            if (Physics.Raycast(
+                    ray,
+                    out hit,
+                    100.0f,
+                    LayerMask.GetMask(LayerMask.LayerToName(TimelinePiece.TimelinePiece.DefaultLayer)))
+                        && hit.transform.gameObject.CompareTag(this.tag)) {
+                Debug.Log("Swap");
+                this.timeline.SwapPiece(this.pickedUpPiece.Piece, hit.transform.gameObject);
+                Debug.DrawLine(Input.mousePosition, hit.point, Color.blue, 10);
+            }
+            RaycastHit[] hits = Physics.RaycastAll(ray, 100.0f, LayerMask.GetMask(
+                LayerMask.LayerToName(TimelinePiece.TimelinePiece.DefaultLayer)));
+            Debug.Log(hits.Length);
+            for (int i = 0; i < hits.Length; i++) {
+                Debug.Log(hits[i]);
+            }
+
+            this.pickedUpPiece.Piece.transform.gameObject.layer = TimelinePiece.TimelinePiece.DefaultLayer;
             this.pickedUpPiece.Piece = null;
 
         }

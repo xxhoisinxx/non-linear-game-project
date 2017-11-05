@@ -84,20 +84,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   componentsSettings:
-    timelineGameObject: {fileID: 1091545846744640, guid: 4a206cdd6cbe1e2429760c8124a022c5,
+    timelinePieceGameObject: {fileID: 1091545846744640, guid: 4a206cdd6cbe1e2429760c8124a022c5,
       type: 2}
     transform: {fileID: 4115045864653974}
   dimensionsSettings:
-    numberOfSectors: 3
-    uniformSectorDepth: 3
-    uniformSectorHeight: 1
+    numberOfTimelinePieces:
+      value: 12
+    uniformSectorDepth:
+      value: 3
+    uniformSectorHeight:
+      value: 1
   radiusSettings:
-    initialRadius: 1
-    minRadius: 0
-    maxRadius: 1
+    currentRadius:
+      value: 2
+    minRadius:
+      value: 1
+    maxRadius:
+      value: 3
   speedSettings:
-    pulsationSpeed: 0.31
-    rotationSpeed: 7.43
+    pulsationSpeed:
+      value: 0.05
+    rotationSpeed:
+      value: 30
 --- !u!114 &114220070836946912
 MonoBehaviour:
   m_ObjectHideFlags: 1

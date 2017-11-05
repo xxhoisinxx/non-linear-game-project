@@ -126,9 +126,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Convex: 0
-  m_InflateMesh: 0
-  m_SkinWidth: 0.01
+  m_Convex: 1
+  m_InflateMesh: 1
+  m_SkinWidth: 0.1
   m_Mesh: {fileID: 0}
 --- !u!114 &114686426584509966
 MonoBehaviour:
@@ -145,7 +145,8 @@ MonoBehaviour:
     meshFilter: {fileID: 33972697516491768}
     meshCollider: {fileID: 64710306271416466}
     transform: {fileID: 4592831626745958}
-    layer: 0
+    meshRenderer: {fileID: 23176152925461778}
+    layer: 8
 --- !u!114 &114689041333320966
 MonoBehaviour:
   m_ObjectHideFlags: 1

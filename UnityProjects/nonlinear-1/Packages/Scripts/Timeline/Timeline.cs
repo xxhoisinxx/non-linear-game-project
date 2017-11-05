@@ -210,6 +210,9 @@ namespace Scripts.Timeline {
                     this.radiusSettings.CurrentRadius.Value = value;
                 }
                 foreach (var piece in this.timelinePieces) {
+                    if (!piece.IsActive) {
+                        continue;
+                    }
                     Debug.DrawRay(piece.Sector.Transform.position, piece.Sector.Transform.forward * 10, Color.red);
                     piece.Sector.Transform.localPosition = Vector3.zero;
                     piece.Sector.Transform.Translate(piece.Sector.Transform.forward * this.radius, Space.World);
@@ -357,12 +360,12 @@ namespace Scripts.Timeline {
         /// The <see cref="TimelinePiece"/>.
         /// </returns>
         public TimelinePiece.TimelinePiece RemovePiece(GameObject pieceGameObject) {
-            var piece = this.timelinePieces.FirstOrDefault(p => p.Sector.Transform.gameObject == pieceGameObject);
+            var piece = this.GetPiece(pieceGameObject);
             if (piece == null) {
                 return null;
             }
             this.timelinePieces.Remove(piece);
-            this.ResetPieces();
+            this.ResetActivePieces();
             return piece;
         }
 
@@ -373,7 +376,7 @@ namespace Scripts.Timeline {
 
         public void InsertLast(TimelinePiece.TimelinePiece piece) {
             this.timelinePieces.AddLast(piece);
-            ResetPieces();
+            this.ResetActivePieces();
         }
 
         public TimelinePiece.TimelinePiece AddLast() {
@@ -384,14 +387,45 @@ namespace Scripts.Timeline {
             this.timelinePieces.AddLast(piece);
             return piece;
         }
-/*
-        public TimelinePie*/
 
-        public void InsertAndSwapPiece(TimelinePiece.TimelinePiece swap, TimelinePiece.TimelinePiece piece) {
+        public TimelinePiece.TimelinePiece DeactivatePiece(GameObject pieceGameObject) {
+            var piece = this.GetPiece(pieceGameObject);
+            if (piece == null) {
+                return null;
+            }
+            piece.IsActive = false;
+            piece.transform.parent = null;
+            return piece;
+        }
+
+        public void ReactivatePiece(TimelinePiece.TimelinePiece piece) {
+            piece.IsActive = true;
+            piece.transform.parent = this.componentSettings.Transform;
+        }
+
+        public void SwapPiece(TimelinePiece.TimelinePiece piece1, TimelinePiece.TimelinePiece piece2) {
+            if (piece1 == null || piece2 == null) {
+                throw new ArgumentException();
+            }
+            var piece1Active = piece1.IsActive;
+            piece1.IsActive = piece2.IsActive;
+            piece2.IsActive = piece1Active;
+            var piece1Color = piece1.MeshRenderer.material.color;
+            piece1.MeshRenderer.material.color = piece2.MeshRenderer.material.color;
+            piece2.MeshRenderer.material.color = piece1Color;
+            this.ResetActivePieces();
+        }
+
+        public void SwapPiece(TimelinePiece.TimelinePiece piece1, GameObject piece2) {
+            this.SwapPiece(piece1, this.GetPiece(piece2));
 
         }
 
-        private void ResetPieces() {
+        private TimelinePiece.TimelinePiece GetPiece(GameObject pieceGameObject) {
+            return this.timelinePieces.FirstOrDefault(p => p.Sector.Transform.gameObject == pieceGameObject);
+        }
+
+        private void ResetActivePieces() {
             var counter = 0;
             foreach (var piece in this.timelinePieces) {
                 piece.Sector.Slice = this.NumberOfTimelinePieces;
@@ -417,7 +451,7 @@ namespace Scripts.Timeline {
                 /// The game object.
                 /// </summary>
                 [SerializeField]
-                private GameObject timelineGameObject;
+                private GameObject timelinePieceGameObject;
 
                 /// <summary>
                 /// The transform.
@@ -428,13 +462,13 @@ namespace Scripts.Timeline {
                 /// <summary>
                 /// Gets or sets the game object.
                 /// </summary>
-                internal GameObject TimelineGameObject {
+                internal GameObject TimelinePieceGameObject {
                     get {
-                        return this.timelineGameObject;
+                        return this.timelinePieceGameObject;
                     }
 
                     set {
-                        this.timelineGameObject = value;
+                        this.timelinePieceGameObject = value;
                     }
                 }
 

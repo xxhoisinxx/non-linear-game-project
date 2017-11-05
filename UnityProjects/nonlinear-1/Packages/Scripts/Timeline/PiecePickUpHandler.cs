@@ -40,14 +40,25 @@
         }
 
         public void FixedTick() {
+            if (this.pickedUpPiece.Piece != null && Input.GetMouseButton(0)) {
+                var v3 = Input.mousePosition;
+                v3.z = 7.5f;
+                v3 = Camera.main.ScreenToWorldPoint(v3);
+                this.pickedUpPiece.Piece.Sector.Transform.position = v3;
+            }
             if (!Input.GetMouseButtonDown(0) || this.pickedUpPiece.Piece != null) {
                 return;
             }
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 100.0f) && hit.transform.gameObject.CompareTag(this.tag)) {
+            if (Physics.Raycast(
+                    ray,
+                    out hit,
+                    100.0f,
+                    LayerMask.GetMask(LayerMask.LayerToName(TimelinePiece.TimelinePiece.DefaultLayer)))
+                        && hit.transform.gameObject.CompareTag(this.tag)) {
                 Debug.Log("Adding");
-                this.pickedUpPiece.Piece = this.timeline.RemovePiece(hit.transform.gameObject);
+                this.pickedUpPiece.Piece = this.timeline.DeactivatePiece(hit.transform.gameObject);
                 hit.transform.gameObject.layer = 2;
             }
         }

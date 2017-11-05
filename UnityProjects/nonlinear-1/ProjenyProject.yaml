@@ -3,6 +3,7 @@ AssetsFolder:
 - Scenes
 - Prefabs
 - Materials
+- Resources
 ProjectSettingsPath: '[ProjectRoot]/ProjectSettings'
 PluginsFolder:
 - 3DPrimitives
