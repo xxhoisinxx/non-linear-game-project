@@ -42,3 +42,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: asdf
+    uniqueID: 3609592415
+    locked: 0
+  - name: fdsa
+    uniqueID: 1747406907
+    locked: 0
