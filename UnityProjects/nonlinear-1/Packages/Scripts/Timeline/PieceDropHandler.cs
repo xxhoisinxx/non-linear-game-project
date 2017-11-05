@@ -54,15 +54,8 @@ namespace Scripts.Timeline {
                     100.0f,
                     LayerMask.GetMask(LayerMask.LayerToName(TimelinePiece.TimelinePiece.DefaultLayer)))
                         && hit.transform.gameObject.CompareTag(this.tag)) {
-                Debug.Log("Swap");
                 this.timeline.SwapPiece(this.pickedUpPiece.Piece, hit.transform.gameObject);
                 Debug.DrawLine(Input.mousePosition, hit.point, Color.blue, 10);
-            }
-            RaycastHit[] hits = Physics.RaycastAll(ray, 100.0f, LayerMask.GetMask(
-                LayerMask.LayerToName(TimelinePiece.TimelinePiece.DefaultLayer)));
-            Debug.Log(hits.Length);
-            for (int i = 0; i < hits.Length; i++) {
-                Debug.Log(hits[i]);
             }
 
             this.pickedUpPiece.Piece.transform.gameObject.layer = TimelinePiece.TimelinePiece.DefaultLayer;

@@ -35,16 +35,30 @@
         private RaycastHit lastHit;
 
         /// <summary>
+        /// The starting camera distance.
+        /// </summary>
+        private float startingCameraDistance;
+
+        private float startingYPosition;
+
+        /// <summary>
         /// The initialize.
         /// </summary>
         public void Initialize() {
+            this.startingCameraDistance = Mathf.Abs(
+                this.componentSettings.Transform.position.z - Camera.main.transform.position.z);
+            this.startingYPosition = this.componentSettings.Transform.position.y;
         }
 
         /// <summary>
         /// The fixed tick.
         /// </summary>
         public void FixedTick() {
-            Debug.DrawRay(Camera.main.transform.position, (this.lastHit.point - Camera.main.transform.position).normalized * Vector3.Distance(Camera.main.transform.position, this.lastHit.point), Color.red);
+            var dir = (this.lastHit.point - Camera.main.transform.position).normalized;
+            Debug.DrawRay(
+                Camera.main.transform.position,
+                dir * Vector3.Distance(Camera.main.transform.position, this.lastHit.point),
+                Color.red);
             if (!Input.GetMouseButtonDown(0)) {
                 return;
             }
@@ -70,11 +84,16 @@
         /// </returns>
         private IEnumerator MoveTo(Vector3 target, float minimumDistance) {
             while (Vector3.Distance(this.componentSettings.Transform.position, target) > minimumDistance) {
-                Debug.Log(Vector3.Distance(this.componentSettings.Transform.position, target));
-                Debug.Log(minimumDistance);
+                var cameraPlayerDist = Mathf.Abs(
+                    this.componentSettings.Transform.position.z - Camera.main.transform.position.z);
+                var distanceScaleRatio = cameraPlayerDist / this.startingCameraDistance;
+                this.componentSettings.Transform.localScale = new Vector3(
+                    distanceScaleRatio,
+                    distanceScaleRatio,
+                    distanceScaleRatio);
                 this.componentSettings.Transform.position = Vector3.MoveTowards(
                     this.componentSettings.Transform.position,
-                    new Vector3(target.x, this.componentSettings.Transform.position.y, target.z),
+                    new Vector3(target.x, 0.01f, target.z),
                     this.movementSettings.Speed * Time.deltaTime);
                 yield return new WaitForFixedUpdate();
             }

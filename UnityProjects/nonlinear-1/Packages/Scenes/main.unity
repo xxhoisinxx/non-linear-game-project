@@ -196,22 +196,22 @@ Prefab:
     - target: {fileID: 114154516922499026, guid: ab193b4de80c79c45b0b6205acf8d919,
         type: 2}
       propertyPath: dimensionsSettings.numberOfTimelinePieces.value
-      value: 3
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 114154516922499026, guid: ab193b4de80c79c45b0b6205acf8d919,
         type: 2}
       propertyPath: speedSettings.rotationSpeed.value
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 114154516922499026, guid: ab193b4de80c79c45b0b6205acf8d919,
         type: 2}
       propertyPath: speedSettings.pulsationSpeed.value
-      value: 0
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 114154516922499026, guid: ab193b4de80c79c45b0b6205acf8d919,
         type: 2}
       propertyPath: radiusSettings.maxRadius.value
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ab193b4de80c79c45b0b6205acf8d919, type: 2}

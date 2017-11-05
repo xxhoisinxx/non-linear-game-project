@@ -90,7 +90,7 @@ namespace Scripts.Timeline {
         /// The sector factory.
         /// </summary>
         [Inject]
-        private TimelinePiece.TimelinePiece.Pool timelineFactory;
+        private TimelinePiece.TimelinePiece.Pool timelinePieceFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Timeline"/> class.
@@ -370,7 +370,7 @@ namespace Scripts.Timeline {
         }
 
         public void RemoveLast() {
-            this.timelineFactory.Despawn(this.timelinePieces.Last.Value);
+            this.timelinePieceFactory.Despawn(this.timelinePieces.Last.Value);
             this.timelinePieces.RemoveLast();
         }
 
@@ -380,7 +380,7 @@ namespace Scripts.Timeline {
         }
 
         public TimelinePiece.TimelinePiece AddLast() {
-            var piece = this.timelineFactory.Spawn(
+            var piece = this.timelinePieceFactory.Spawn(
                 this.UniformSectorDepth,
                 this.UniformSectorHeight,
                 this.NumberOfTimelinePieces + 1);

@@ -39,6 +39,9 @@
             this.timeline = timeline;
         }
 
+        /// <summary>
+        /// The fixed tick.
+        /// </summary>
         public void FixedTick() {
             if (this.pickedUpPiece.Piece != null && Input.GetMouseButton(0)) {
                 var v3 = Input.mousePosition;
@@ -57,7 +60,6 @@
                     100.0f,
                     LayerMask.GetMask(LayerMask.LayerToName(TimelinePiece.TimelinePiece.DefaultLayer)))
                         && hit.transform.gameObject.CompareTag(this.tag)) {
-                Debug.Log("Adding");
                 this.pickedUpPiece.Piece = this.timeline.DeactivatePiece(hit.transform.gameObject);
                 hit.transform.gameObject.layer = 2;
             }
