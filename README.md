@@ -13,7 +13,8 @@ Please see the following blogs for the latest updates!
 
 * [Ryan's Blog](https://drdgvhbh.github.io/non-linear-game-project/)
 * [Anny's Blog](https://nonlinearcat.wordpress.com/category/anny/)
+* [June's Blog](https://nonlinearcat.wordpress.com/category/june/)
 * [Greg's Blog](https://nonlinearcat.wordpress.com/category/greg/)
-* [Jeannette's Blog](https://nonlinearcat.wordpress.com/category/jeanette/)
+* [Jeanette's Blog](https://fantashii.tumblr.com/)
 * [Thomas' Blog](https://nonlinearcat.wordpress.com/category/thomas/)
 ---
