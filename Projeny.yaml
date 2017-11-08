@@ -1,9 +1,0 @@
-
-# You can edit this file directly
-# See documentation for the full list of configuration settings
-
-PathVars:
-    UnityProjectsDir: '[ConfigDir]/UnityProjects'
-    SharedUnityPackagesDir: '[ConfigDir]/UnityPackages'
-    LogPath: '[ConfigDir]/PrjLog.txt'
-    VisualStudioIdePath: 'C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/Common7/IDE/devenv.exe'
