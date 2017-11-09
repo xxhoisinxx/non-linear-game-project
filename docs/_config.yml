@@ -17,7 +17,7 @@ title: ___ Development Blog
 email: drdgvhbh@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
   ___ Game Development Blog.
-baseurl: "/non-linear-game-project" # the subpath of your site, e.g. /blog
+baseurl: "/non-linear-game" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 github_username:  drdgvhbh
 
