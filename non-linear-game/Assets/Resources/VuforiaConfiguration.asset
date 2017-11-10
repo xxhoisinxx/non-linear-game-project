@@ -45,14 +45,8 @@ MonoBehaviour:
   databaseLoad:
     dataSetsToLoad:
     - derp
-    - VuforiaMars_Images
-    - VuforiaMars_Object_OT
-    - VuforiaMars_VuMark
     dataSetsToActivate:
     - derp
-    - VuforiaMars_VuMark
-    - VuforiaMars_Images
-    - VuforiaMars_Object_OT
   videoBackground:
     clippingMode: 0
     numDivisions: 2

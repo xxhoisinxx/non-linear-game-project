@@ -140,11 +140,11 @@ public class DefaultInitializationErrorHandler : MonoBehaviour
                 break;
 #if (UNITY_IPHONE || UNITY_IOS)
                 case VuforiaUnity.InitError.INIT_NO_CAMERA_ACCESS:
-                    mErrorText = 
-                        "Camera Access was denied to this App. \n" + 
-                        "When running on iOS8 devices, \n" + 
-                        "users must explicitly allow the App to access the camera.\n" + 
-                        "To restore camera access on your device, go to: \n" + 
+                    mErrorText =
+                        "Camera Access was denied to this App. \n" +
+                        "When running on iOS8 devices, \n" +
+                        "users must explicitly allow the App to access the camera.\n" +
+                        "To restore camera access on your device, go to: \n" +
                         "Settings > Privacy > Camera > [This App Name] and switch it ON.";
                     break;
     #endif
@@ -162,7 +162,7 @@ public class DefaultInitializationErrorHandler : MonoBehaviour
         // Remove rich text tags for console logging
         var errorTextConsole = mErrorText.Replace("<color=red>", "").Replace("</color>", "");
 
-        Debug.LogError("Vuforia initialization failed: " + errorCode + "\n\n" + errorTextConsole);
+/*        Debug.LogError("Vuforia initialization failed: " + errorCode + "\n\n" + errorTextConsole);*/
     }
 
     void SetErrorOccurred(bool errorOccurred)

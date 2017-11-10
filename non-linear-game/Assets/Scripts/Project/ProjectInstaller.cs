@@ -24,7 +24,6 @@ namespace Project {
             // Setup Log4Net
             LogConfigurationManager.ConfigureAllLogging();
             Log.Info("Logging successfully configured");
-            Log.Debug(Log.Logger.Name);
             this.Container.Bind<TrackerManager>().FromInstance(TrackerManager.Instance);
             Log.Info("Project bindings successfully installed");
 /*            ((log4net.Repository.Hierarchy.Logger)log.Logger).Level = log4net.Core.Level.Debug;*/

@@ -16,8 +16,6 @@ namespace Assets.Scripts.Installers {
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public override void InstallBindings() {
-            Log.Debug(Vuforia.TrackerManager.Instance.GetStateManager().GetActiveTrackableBehaviours());
-
         }
     }
 }
