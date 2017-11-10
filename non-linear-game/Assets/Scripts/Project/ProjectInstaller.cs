@@ -5,6 +5,8 @@ namespace Project {
 
     using Logging;
 
+    using Scrapbook;
+
     using Vuforia;
 
     /// <summary>
@@ -23,9 +25,10 @@ namespace Project {
         public override void InstallBindings() {
             // Setup Log4Net
             LogConfigurationManager.ConfigureAllLogging();
-            Log.Info("Logging successfully configured");
+            Log.Info("[Success] Logging configured");
+            this.Container.BindInterfacesAndSelfTo<ScrapbookManager>().AsSingle();
             this.Container.Bind<TrackerManager>().FromInstance(TrackerManager.Instance);
-            Log.Info("Project bindings successfully installed");
+            Log.Info("[Success] Project bindings installed");
 /*            ((log4net.Repository.Hierarchy.Logger)log.Logger).Level = log4net.Core.Level.Debug;*/
         }
     }

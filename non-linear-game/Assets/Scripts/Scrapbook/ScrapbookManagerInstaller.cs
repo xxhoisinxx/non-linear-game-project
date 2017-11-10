@@ -18,6 +18,8 @@
         /// </summary>
         public override void InstallBindings() {
             this.Container.Bind<ScrapbookManager.Settings>().FromInstance(this.settings);
+            this.Container.BindMemoryPool<PageDetectionHandler, PageDetectionHandler.Pool>()
+                .WhenInjectedInto<ScrapbookManager>();
         }
     }
 }

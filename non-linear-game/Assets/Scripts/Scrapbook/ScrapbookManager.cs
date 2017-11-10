@@ -19,7 +19,8 @@
     /// <summary>
     /// The scrapbook manager.
     /// </summary>
-    public class ScrapbookManager : MonoBehaviour {
+    [Serializable]
+    public class ScrapbookManager : IInitializable, IDisposable {
         /// <summary>
         /// The logger for this class.
         /// </summary>
@@ -45,17 +46,25 @@
         /// <summary>
         /// The database of image targets.
         /// </summary>
-        private XmlDocument database;
+        private readonly XmlDocument database;
 
         /// <summary>
         /// The collection of disposable action listeners.
         /// </summary>
-        private LinkedList<IDisposable> disposableActionListeners;
+        private readonly LinkedList<IDisposable> disposableActionListeners;
 
         /// <summary>
         /// Gets the page dictionary.
         /// </summary>
-        public Dictionary<string, TrackableBehaviour> PageDictionary { get; private set; }
+        public Dictionary<string, PageDetectionHandler> PageDictionary { get; private set; }
+
+        public ReactiveProperty<string> newScene { get; set; }
+
+        /// <summary>
+        /// The factory.
+        /// </summary>
+        [Inject]
+        private PageDetectionHandler.Pool factory;
 
         /// <summary>
         /// Gets or sets the database name.
@@ -75,7 +84,7 @@
                         Log.WarnFormat("Unable to load {0}", filePath);
                     }
                     else {
-                        Log.ErrorFormat("Unable to load {0}", filePath);
+                        Log.Error("Unable to load " + filePath, e);
                         throw;
                     }
 
@@ -101,7 +110,9 @@
                     while (enumerator.MoveNext()) {
                         // ReSharper disable once PossibleNullReferenceException
                         if (enumerator.Current.TrackableName.Equals(imageName)) {
-                            this.PageDictionary.Add(imageName, enumerator.Current);
+                            this.PageDictionary.Add(
+                                imageName,
+                                this.factory.Spawn(enumerator.Current));
                         }
                     }
 
@@ -110,53 +121,25 @@
             }
         }
 
-        /// <summary>
-        /// Initializes the dependencies for this <see cref="ScrapbookManager"/>.
-        /// </summary>
-        /// <param name="tm">
-        /// The <see cref="Vuforia.TrackerManager"/> instance.
-        /// </param>
         [Inject]
-        public void Construct(TrackerManager tm) {
+        public ScrapbookManager(TrackerManager tm) {
             this.trackerManager = tm;
-        }
-
-        /// <summary>
-        /// Initializes the <see cref="ScrapbookManager"/>.
-        /// </summary>
-        protected void Awake() {
             this.database = new XmlDocument();
-            this.PageDictionary = new Dictionary<string, TrackableBehaviour>();
+            this.PageDictionary = new Dictionary<string, PageDetectionHandler>();
             this.disposableActionListeners = new LinkedList<IDisposable>();
+            this.newScene = new ReactiveProperty<string>(string.Empty);
         }
 
-        /// <summary>
-        /// The start.
-        /// </summary>
-        protected void Start() {
+        public void Initialize() {
             this.disposableActionListeners.AddLast(this.settings.DatabaseName.Throttle(TimeSpan.FromMilliseconds(500)).Subscribe(
                 dbName => { this.DatabaseName = dbName; }));
-
-            var derp = this.trackerManager.GetStateManager().GetTrackableBehaviours().GetEnumerator();
-            while (derp.MoveNext()) {
-                Log.Debug(derp.Current.TrackableName);
-            }
-
-
-/*            var enumerator = this.trackerManager.GetStateManager().GetTrackableBehaviours().GetEnumerator();
-            Log.Debug("Hello world!");
-            while (enumerator.MoveNext()) {
-                Log.Debug(enumerator.Current?.TrackableName);
-                Log.Debug(enumerator.Current?.CurrentStatus);
-            }
-
-            enumerator.Dispose();*/
+            this.newScene.Subscribe(
+                e => {
+                    Log.InfoFormat("The detected new scene is {0}", e);
+                });
         }
 
-        /// <summary>
-        /// Cleans up any resources when this <see cref="ScrapbookManager"/> is disabled.
-        /// </summary>
-        protected void OnDisable() {
+        public void Dispose() {
             var length = this.disposableActionListeners.Count;
             for (var i = 0; i < length; i++) {
                 this.disposableActionListeners.Last.Value.Dispose();
@@ -184,10 +167,6 @@
                 }
             }
         }
-
-        protected void Update () {
-        }
-
 
     }
 }
