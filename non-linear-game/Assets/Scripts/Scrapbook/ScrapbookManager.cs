@@ -1,6 +1,9 @@
 ﻿namespace Scrapbook {
     using System;
+    using System.Collections;
+    using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Xml;
 
     using log4net;
@@ -39,7 +42,20 @@
         /// </summary>
         private string databaseName;
 
+        /// <summary>
+        /// The database of image targets.
+        /// </summary>
         private XmlDocument database;
+
+        /// <summary>
+        /// The collection of disposable action listeners.
+        /// </summary>
+        private LinkedList<IDisposable> disposableActionListeners;
+
+        /// <summary>
+        /// Gets the page dictionary.
+        /// </summary>
+        public Dictionary<string, TrackableBehaviour> PageDictionary { get; private set; }
 
         /// <summary>
         /// Gets or sets the database name.
@@ -50,16 +66,16 @@
             }
 
             set {
-                var filepath = System.IO.Path.Combine(Application.streamingAssetsPath, "Vuforia", value + ".xml");
+                var filePath = System.IO.Path.Combine(Application.streamingAssetsPath, "Vuforia", value + ".xml");
                 try {
-                    this.database.Load(filepath);
+                    this.database.Load(filePath);
                 }
                 catch (DirectoryNotFoundException e) {
                     if (this.database.DocumentElement != null) {
-                        Log.WarnFormat("Unable to load {0}", filepath);
+                        Log.WarnFormat("Unable to load {0}", filePath);
                     }
                     else {
-                        Log.ErrorFormat("Unable to load {0}", filepath);
+                        Log.ErrorFormat("Unable to load {0}", filePath);
                         throw;
                     }
 
@@ -72,18 +88,30 @@
                     return;
                 }
                 foreach (XmlNode node in imageTargets) {
+                    string imageName;
                     try {
-                        Log.Debug(node.Attributes["name"].Value);
+                        // ReSharper disable once PossibleNullReferenceException
+                        imageName = node.Attributes["name"].Value;
                     }
-                    catch (NullReferenceException e) {
-                        Log.WarnFormat("ImageTarget does not have a name attribute in {0}", filepath);
+                    catch (NullReferenceException) {
+                        Log.WarnFormat("ImageTarget does not have a name attribute in {0}", filePath);
+                        continue;
                     }
+                    var enumerator = this.trackerManager.GetStateManager().GetTrackableBehaviours().GetEnumerator();
+                    while (enumerator.MoveNext()) {
+                        // ReSharper disable once PossibleNullReferenceException
+                        if (enumerator.Current.TrackableName.Equals(imageName)) {
+                            this.PageDictionary.Add(imageName, enumerator.Current);
+                        }
+                    }
+
+                    enumerator.Dispose();
                 }
             }
         }
 
         /// <summary>
-        /// Initializes the dependencies for this scrapbook.
+        /// Initializes the dependencies for this <see cref="ScrapbookManager"/>.
         /// </summary>
         /// <param name="tm">
         /// The <see cref="Vuforia.TrackerManager"/> instance.
@@ -93,17 +121,26 @@
             this.trackerManager = tm;
         }
 
+        /// <summary>
+        /// Initializes the <see cref="ScrapbookManager"/>.
+        /// </summary>
         protected void Awake() {
             this.database = new XmlDocument();
+            this.PageDictionary = new Dictionary<string, TrackableBehaviour>();
+            this.disposableActionListeners = new LinkedList<IDisposable>();
         }
 
         /// <summary>
         /// The start.
         /// </summary>
         protected void Start() {
-            this.settings.DatabaseName.Throttle(TimeSpan.FromMilliseconds(500)).Subscribe(
-                dbName => { this.DatabaseName = dbName; });
+            this.disposableActionListeners.AddLast(this.settings.DatabaseName.Throttle(TimeSpan.FromMilliseconds(500)).Subscribe(
+                dbName => { this.DatabaseName = dbName; }));
 
+            var derp = this.trackerManager.GetStateManager().GetTrackableBehaviours().GetEnumerator();
+            while (derp.MoveNext()) {
+                Log.Debug(derp.Current.TrackableName);
+            }
 
 
 /*            var enumerator = this.trackerManager.GetStateManager().GetTrackableBehaviours().GetEnumerator();
@@ -114,6 +151,17 @@
             }
 
             enumerator.Dispose();*/
+        }
+
+        /// <summary>
+        /// Cleans up any resources when this <see cref="ScrapbookManager"/> is disabled.
+        /// </summary>
+        protected void OnDisable() {
+            var length = this.disposableActionListeners.Count;
+            for (var i = 0; i < length; i++) {
+                this.disposableActionListeners.Last.Value.Dispose();
+                this.disposableActionListeners.RemoveLast();
+            }
         }
 
         /// <summary>
