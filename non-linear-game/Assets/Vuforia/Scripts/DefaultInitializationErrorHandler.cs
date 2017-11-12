@@ -160,7 +160,7 @@ public class DefaultInitializationErrorHandler : MonoBehaviour
         mErrorText = "<color=red>" + errorCode.ToString().Replace("_", " ") + "</color>\n\n" + mErrorText;
 
         // Remove rich text tags for console logging
-        var errorTextConsole = mErrorText.Replace("<color=red>", "").Replace("</color>", "");
+       // var errorTextConsole = mErrorText.Replace("<color=red>", "").Replace("</color>", "");
 
 /*        Debug.LogError("Vuforia initialization failed: " + errorCode + "\n\n" + errorTextConsole);*/
     }

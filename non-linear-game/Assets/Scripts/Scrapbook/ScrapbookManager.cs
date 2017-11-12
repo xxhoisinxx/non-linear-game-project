@@ -2,6 +2,7 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.IO;
     using System.Linq;
     using System.Xml;
@@ -11,6 +12,7 @@
     using UniRx;
 
     using UnityEngine;
+    using UnityEngine.SceneManagement;
 
     using Vuforia;
 
@@ -20,7 +22,8 @@
     /// The scrapbook manager.
     /// </summary>
     [Serializable]
-    public class ScrapbookManager : IInitializable, IDisposable {
+    // ReSharper disable once InheritdocConsiderUsage
+    public sealed class ScrapbookManager : IInitializable, IDisposable {
         /// <summary>
         /// The logger for this class.
         /// </summary>
@@ -135,9 +138,16 @@
                 dbName => { this.DatabaseName = dbName; }));
             this.newScene.Subscribe(
                 e => {
+                    if (string.IsNullOrEmpty(e)) {
+                        return;
+                    }
                     Log.InfoFormat("The detected new scene is {0}", e);
+            /*        this.LoadSceneAsync(e, SceneManager.GetSceneByName(e)).ToObservable().Subscribe();*/
                 });
+
+/*            SceneManager.sceneLoaded += this.OnSceneLoaded;*/
         }
+
 
         public void Dispose() {
             var length = this.disposableActionListeners.Count;

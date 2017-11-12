@@ -1,16 +1,22 @@
 ﻿using Zenject;
 
 namespace Project {
+    using System;
+
     using log4net;
 
     using Logging;
 
+    using SceneLoadedHandlers;
+
     using Scrapbook;
+
+    using UnityEngine.SceneManagement;
 
     using Vuforia;
 
     /// <summary>
-    /// Represents a dependency injection installer for a project
+    /// Represents a dependency injector for this project.
     /// </summary>
     public class ProjectInstaller : MonoInstaller {
         /// <summary>
@@ -26,10 +32,23 @@ namespace Project {
             // Setup Log4Net
             LogConfigurationManager.ConfigureAllLogging();
             Log.Info("[Success] Logging configured");
-            this.Container.BindInterfacesAndSelfTo<ScrapbookManager>().AsSingle();
-            this.Container.Bind<TrackerManager>().FromInstance(TrackerManager.Instance);
+            this.Container.Bind<ISceneLoadedHandler>()
+                .To<SceneLoadedHandler>()
+                .AsSingle();
+            this.Container.Bind<IInitializable>()
+                .To<SceneLoadedHandler>()
+                .AsSingle();
+            this.Container.Bind<IDisposable>()
+                .To<SceneLoadedHandler>()
+                .AsSingle();
+            this.Container.BindInterfacesAndSelfTo<ZenjectSceneLoader>()
+                .AsSingle();
+            this.Container.BindInterfacesAndSelfTo<ScrapbookManager>()
+                .AsSingle();
+            this.Container.Bind<TrackerManager>()
+                .FromInstance(TrackerManager.Instance);
             Log.Info("[Success] Project bindings installed");
 /*            ((log4net.Repository.Hierarchy.Logger)log.Logger).Level = log4net.Core.Level.Debug;*/
         }
-    }
+   }
 }
