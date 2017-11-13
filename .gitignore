@@ -98,3 +98,4 @@ PrjLog.txt
 *.prefab linguist-generated
 *.unity linguist-generated
 
+*/QCAR/*
