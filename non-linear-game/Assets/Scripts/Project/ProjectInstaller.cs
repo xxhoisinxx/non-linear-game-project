@@ -3,6 +3,8 @@
 namespace Project {
     using System;
 
+    using ButtonClickHandler;
+
     using log4net;
 
     using Logging;
@@ -43,10 +45,12 @@ namespace Project {
                 .AsSingle();
             this.Container.BindInterfacesAndSelfTo<ZenjectSceneLoader>()
                 .AsSingle();
-            this.Container.BindInterfacesAndSelfTo<ScrapbookManager>()
-                .AsSingle();
             this.Container.Bind<TrackerManager>()
                 .FromInstance(TrackerManager.Instance);
+            this.Container
+                .BindMemoryPool<LoadSceneButtonHandler,
+                    // ReSharper disable once StyleCop.SA1110
+                    LoadSceneButtonHandler.Pool>();
             Log.Info("[Success] Project bindings installed");
 /*            ((log4net.Repository.Hierarchy.Logger)log.Logger).Level = log4net.Core.Level.Debug;*/
         }

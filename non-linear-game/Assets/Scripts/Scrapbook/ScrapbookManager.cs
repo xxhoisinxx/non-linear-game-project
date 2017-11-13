@@ -7,12 +7,17 @@
     using System.Linq;
     using System.Xml;
 
+    using ButtonClickHandler;
+
+    using Handlers.Scrapbook;
+
     using log4net;
 
     using UniRx;
 
     using UnityEngine;
     using UnityEngine.SceneManagement;
+    using UnityEngine.UI;
 
     using Vuforia;
 
@@ -67,7 +72,14 @@
         /// The factory.
         /// </summary>
         [Inject]
-        private PageDetectionHandler.Pool factory;
+        private PageDetectionHandler.Pool pageDetectionHandlerFactory;
+
+        [Inject]
+        private LoadSceneButtonHandler.Pool loadSceneButtonHandlerFactory;
+
+        private LoadSceneButtonHandler loadSceneButtonHandler;
+
+        private Button LoadSceneButton;
 
         /// <summary>
         /// Gets or sets the database name.
@@ -84,10 +96,10 @@
                 }
                 catch (DirectoryNotFoundException e) {
                     if (this.database.DocumentElement != null) {
-                        Log.WarnFormat("Unable to load {0}", filePath);
+                        Log.WarnFormat("[Failure] Unable to load {0}", filePath);
                     }
                     else {
-                        Log.Error("Unable to load " + filePath, e);
+                        Log.Error("[Failure] Unable to load " + filePath, e);
                         throw;
                     }
 
@@ -106,7 +118,7 @@
                         imageName = node.Attributes["name"].Value;
                     }
                     catch (NullReferenceException) {
-                        Log.WarnFormat("ImageTarget does not have a name attribute in {0}", filePath);
+                        Log.WarnFormat("[Failure] ImageTarget does not have a name attribute in {0}", filePath);
                         continue;
                     }
                     var enumerator = this.trackerManager.GetStateManager().GetTrackableBehaviours().GetEnumerator();
@@ -115,7 +127,7 @@
                         if (enumerator.Current.TrackableName.Equals(imageName)) {
                             this.PageDictionary.Add(
                                 imageName,
-                                this.factory.Spawn(enumerator.Current));
+                                this.pageDetectionHandlerFactory.Spawn(enumerator.Current));
                         }
                     }
 
@@ -134,18 +146,27 @@
         }
 
         public void Initialize() {
+            this.LoadSceneButton = this.settings.LoadSceneButton;
             this.disposableActionListeners.AddLast(this.settings.DatabaseName.Throttle(TimeSpan.FromMilliseconds(500)).Subscribe(
                 dbName => { this.DatabaseName = dbName; }));
             this.newScene.Subscribe(
                 e => {
                     if (string.IsNullOrEmpty(e)) {
+                        this.LoadSceneButton.interactable = false;
                         return;
                     }
-                    Log.InfoFormat("The detected new scene is {0}", e);
-            /*        this.LoadSceneAsync(e, SceneManager.GetSceneByName(e)).ToObservable().Subscribe();*/
-                });
 
-/*            SceneManager.sceneLoaded += this.OnSceneLoaded;*/
+                    Log.InfoFormat("The detected new scene is {0}", e);
+                    this.LoadSceneButton.interactable = true;
+                    if (this.loadSceneButtonHandler != null) {
+                        this.loadSceneButtonHandlerFactory
+                            .Despawn(this.loadSceneButtonHandler);
+                    }
+                    this.loadSceneButtonHandler =
+                        this.loadSceneButtonHandlerFactory.Spawn(
+                            this.LoadSceneButton,
+                            this.newScene.Value);
+                });
         }
 
 
@@ -168,12 +189,21 @@
             [SerializeField]
             private StringReactiveProperty databaseName;
 
+            [SerializeField]
+            private Button loadSceneButton;
+
             /// <summary>
             /// Gets the name of the database.
             /// </summary>
             internal StringReactiveProperty DatabaseName {
                 get {
                     return this.databaseName;
+                }
+            }
+
+            internal Button LoadSceneButton {
+                get {
+                    return this.loadSceneButton;
                 }
             }
         }

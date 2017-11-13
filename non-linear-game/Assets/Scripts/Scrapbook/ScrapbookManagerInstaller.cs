@@ -1,4 +1,6 @@
 ﻿namespace Scrapbook {
+    using Handlers.Scrapbook;
+
     using UnityEngine;
 
     using Zenject;
@@ -18,6 +20,8 @@
         /// </summary>
         public override void InstallBindings() {
             this.Container.Bind<ScrapbookManager.Settings>().FromInstance(this.settings);
+            this.Container.BindInterfacesAndSelfTo<ScrapbookManager>()
+                .AsSingle();
             this.Container.BindMemoryPool<PageDetectionHandler, PageDetectionHandler.Pool>()
                 .WhenInjectedInto<ScrapbookManager>();
         }
