@@ -1,4 +1,6 @@
-﻿namespace Scripts.Player {
+﻿namespace Player {
+    using UniRx;
+
     using UnityEngine;
 
     using Zenject;
@@ -22,6 +24,11 @@
         [Inject]
         public void Construct(Player model) {
             this.model = model;
+            var opa = Observable.EveryUpdate().Where(_ => Input.GetMouseButtonDown(0));
+        }
+
+        protected void Start() {
+
         }
     }
 }

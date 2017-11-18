@@ -1,4 +1,4 @@
-﻿namespace Scripts.Player {
+﻿namespace Player {
     using System;
     using System.Collections;
 
@@ -63,11 +63,11 @@
                 return;
             }
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (!Physics.Raycast(ray, out this.lastHit, 100.0f)) {
+            if (!Physics.Raycast(ray, out this.lastHit, 100.0f, 1 << 8)) {
                 return;
             }
             this.movementCoroutine?.Dispose();
-            this.movementCoroutine = this.MoveTo(this.lastHit.point, 0.5f).ToObservable().Subscribe();
+            this.movementCoroutine = this.MoveTo(this.lastHit.point, 0.25f).ToObservable().Subscribe();
         }
 
         /// <summary>

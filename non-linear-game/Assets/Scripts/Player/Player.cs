@@ -1,4 +1,4 @@
-﻿namespace Scripts.Player {
+﻿namespace Player {
     using System;
 
     using UnityEngine;

@@ -14,7 +14,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - Floor
   - 
   - 
   - 
@@ -41,6 +41,9 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Objects
+    uniqueID: 2300402877
     locked: 0
   - name: Player
     uniqueID: 3404075513
