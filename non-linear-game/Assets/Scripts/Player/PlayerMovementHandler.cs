@@ -43,7 +43,7 @@
         private readonly IntReactiveProperty raycastLayer;
 
         /// <summary>
-        /// The transform.
+        ///     The transform.
         /// </summary>
         private readonly Transform transform;
 
@@ -62,20 +62,13 @@
         [Inject]
         internal PlayerMovementHandler(
                 Camera camera,
-                Player.Settings.Movement movementSettings,
-                Player.Settings.Components componentSettings) {
+                PlayerInstaller.Settings.Movement movementSettings,
+                PlayerInstaller.Settings.Components componentSettings) {
             this.camera = camera;
             this.movementSpeed = movementSettings.Speed;
             this.raycastLayer = movementSettings.RaycastLayer;
             this.transform = componentSettings.Transform;
             this.observers = new LinkedList<IDisposable>();
-        }
-
-        /// <summary>
-        /// Finalizes an instance of the <see cref="PlayerMovementHandler"/> class.
-        /// </summary>
-        ~PlayerMovementHandler() {
-            this.Dispose(false);
         }
 
         /// <summary>
@@ -89,8 +82,9 @@
 
         /// <inheritdoc />
         public void Dispose() {
-            this.Dispose(true);
-            GC.SuppressFinalize(this);
+            this.movementSpeed?.Dispose();
+            this.raycastLayer?.Dispose();
+            this.DisposeObservers();
         }
 
         /// <summary>
@@ -169,24 +163,6 @@
                             this.DisposeObservers();
                         }
                     }));
-        }
-
-        /// <summary>
-        ///     Performs application-defined tasks associated with freeing,
-        ///     releasing, or resetting unmanaged resources.
-        /// </summary>
-        /// <param name="isDisposing">
-        ///     Specifies whether this is being called by the
-        ///      <see cref="Dispose"/> method.
-        /// </param>
-        protected virtual void Dispose(bool isDisposing) {
-            if (!isDisposing) {
-                return;
-            }
-
-            this.movementSpeed?.Dispose();
-            this.raycastLayer?.Dispose();
-            this.DisposeObservers();
         }
 
         /// <summary>

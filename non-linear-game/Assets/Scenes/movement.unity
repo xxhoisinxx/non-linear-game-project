@@ -312,7 +312,7 @@ Prefab:
     - target: {fileID: 224225706341826858, guid: 2dcdf8c7eba71344eadbd9270d26d990,
         type: 2}
       propertyPath: m_LocalPosition.x
-      value: 195.5
+      value: 368
       objectReference: {fileID: 0}
     - target: {fileID: 224225706341826858, guid: 2dcdf8c7eba71344eadbd9270d26d990,
         type: 2}
@@ -337,17 +337,27 @@ Prefab:
     - target: {fileID: 224225706341826858, guid: 2dcdf8c7eba71344eadbd9270d26d990,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: -80
+      value: -8
       objectReference: {fileID: 0}
     - target: {fileID: 224225706341826858, guid: 2dcdf8c7eba71344eadbd9270d26d990,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -22
+      value: -8
       objectReference: {fileID: 0}
     - target: {fileID: 224225706341826858, guid: 2dcdf8c7eba71344eadbd9270d26d990,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: 133
+      value: 203.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 224225706341826858, guid: 2dcdf8c7eba71344eadbd9270d26d990,
+        type: 2}
+      propertyPath: m_Pivot.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224225706341826858, guid: 2dcdf8c7eba71344eadbd9270d26d990,
+        type: 2}
+      propertyPath: m_Pivot.y
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2dcdf8c7eba71344eadbd9270d26d990, type: 2}
@@ -450,6 +460,26 @@ Prefab:
         type: 2}
       propertyPath: movementSettings.raycastLayer.value
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 114870619711528308, guid: 0101910bdd54d2246b0539e2dd827f0f,
+        type: 2}
+      propertyPath: scaleSettings.defaultScale.value.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114870619711528308, guid: 0101910bdd54d2246b0539e2dd827f0f,
+        type: 2}
+      propertyPath: scaleSettings.defaultScale.value.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114870619711528308, guid: 0101910bdd54d2246b0539e2dd827f0f,
+        type: 2}
+      propertyPath: scaleSettings.defaultScale.value.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114870619711528308, guid: 0101910bdd54d2246b0539e2dd827f0f,
+        type: 2}
+      propertyPath: scaleSettings.defaultZDistance.value
+      value: 6.35
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0101910bdd54d2246b0539e2dd827f0f, type: 2}
@@ -823,13 +853,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1043065493}
-  m_LocalRotation: {x: -0.0024267584, y: -0, z: -0, w: 0.99999714}
-  m_LocalPosition: {x: 0.34, y: 2.92, z: -9.58}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.34, y: 2.92, z: -9.65}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: -0.27800003, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1043065498
 MonoBehaviour:
   m_ObjectHideFlags: 0

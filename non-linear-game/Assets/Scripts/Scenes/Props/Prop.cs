@@ -79,7 +79,7 @@
                     _ => {
                         this.spriteRenderer.enabled = true;
                         Log.InfoFormat(
-                            "Sprite renderer activated\nGameobject: {0}",
+                            "Activated \"{0}\" sprite renderer\nGameobject: {0}",
                             this.spriteRenderer.name);
                     }));
             this.observers.AddLast(
@@ -87,7 +87,7 @@
                     _ => {
                         this.spriteRenderer.enabled = false;
                         Log.InfoFormat(
-                            "Sprite renderer deactivated\nGameobject: {0}",
+                            "Deactivated \"{0}\" sprite renderer\nGameobject: {0}",
                             this.spriteRenderer.name);
                     }));
         }

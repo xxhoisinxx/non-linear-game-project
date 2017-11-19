@@ -22,8 +22,8 @@
         /// </param>
         [Inject]
         internal Player(
-            Settings.Movement movementSettings,
-            Settings.Components componentSettings) {
+            PlayerInstaller.Settings.Movement movementSettings,
+            PlayerInstaller.Settings.Components componentSettings) {
             this.MovementSpeed = movementSettings.Speed;
             this.Transform = componentSettings.Transform;
             this.RigidBody = componentSettings.RigidBody;
@@ -48,80 +48,5 @@
         /// The initialize.
         /// </summary>
         public void Initialize() { }
-
-        /// <summary>
-        /// The settings.
-        /// </summary>
-        [Serializable]
-        internal class Settings {
-            /// <summary>
-            /// The components.
-            /// </summary>
-            [Serializable]
-            internal class Components {
-                /// <summary>
-                /// The rigid body.
-                /// </summary>
-                [SerializeField]
-                private Rigidbody rigidBody;
-
-                /// <summary>
-                /// The transform.
-                /// </summary>
-                [SerializeField]
-                private Transform transform;
-
-                /// <summary>
-                /// Gets the rigid body.
-                /// </summary>
-                internal Rigidbody RigidBody {
-                    get {
-                        return this.rigidBody;
-                    }
-                }
-
-                /// <summary>
-                /// Gets the transform.
-                /// </summary>
-                internal Transform Transform {
-                    get {
-                        return this.transform;
-                    }
-                }
-            }
-
-            /// <summary>
-            /// The movement.
-            /// </summary>
-            [Serializable]
-            internal class Movement {
-                /// <summary>
-                /// The speed.
-                /// </summary>
-                [SerializeField]
-                private FloatReactiveProperty speed;
-
-                [SerializeField]
-                private IntReactiveProperty raycastLayer;
-
-                /// <summary>
-                /// Gets or sets the speed.
-                /// </summary>
-                internal FloatReactiveProperty Speed {
-                    get {
-                        return this.speed;
-                    }
-                }
-
-                /// <summary>
-                /// Gets the raycast layer.
-                /// </summary>
-                internal IntReactiveProperty RaycastLayer {
-                    get {
-                        return this.raycastLayer;
-                    }
-                }
-            }
-        }
     }
 }
