@@ -34,7 +34,7 @@
 
         private PlayerFacade player;
 
-        private Camera camera;
+        private new Camera camera;
 
         [Inject]
         public void Construct(
