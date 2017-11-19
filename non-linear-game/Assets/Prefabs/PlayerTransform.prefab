@@ -200,7 +200,7 @@ MonoBehaviour:
     defaultScale:
       value: {x: 1, y: 1, z: 1}
     defaultZDistance:
-      value: 6.35
+      value: 6.29
 --- !u!114 &114500198429844358
 MonoBehaviour:
   m_ObjectHideFlags: 1
