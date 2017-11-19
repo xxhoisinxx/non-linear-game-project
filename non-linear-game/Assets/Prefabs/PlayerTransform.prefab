@@ -39,6 +39,7 @@ GameObject:
   - component: {fileID: 4049225960536698}
   - component: {fileID: 65570937228552692}
   - component: {fileID: 54254375949034734}
+  - component: {fileID: 114355796230872498}
   m_Layer: 2
   m_Name: Player
   m_TagString: Untagged
@@ -71,6 +72,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4043547601313898}
   - component: {fileID: 212539285818012452}
+  - component: {fileID: 114970337982786392}
+  - component: {fileID: 95987977579097140}
   m_Layer: 2
   m_Name: playerSprite
   m_TagString: Untagged
@@ -160,6 +163,23 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 3.77, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!95 &95987977579097140
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1624819017687478}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 9624e836a800b8b48ae5b592b41a49e6, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!114 &114006924265672068
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -201,6 +221,19 @@ MonoBehaviour:
       value: {x: 1, y: 1, z: 1}
     defaultZDistance:
       value: 6.29
+--- !u!114 &114355796230872498
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1284558943724212}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95e864dec241fa5419667deaacf44f09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myRigidbody: {fileID: 0}
+  movementSpeed: 0
 --- !u!114 &114500198429844358
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -228,6 +261,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7bb8378112829c24ba0fe90954dbe970, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114970337982786392
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1624819017687478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f399200d27b29347991b63772418e78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentMovement: 0
 --- !u!212 &212539285818012452
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -262,7 +307,7 @@ SpriteRenderer:
   m_SortingLayerID: -890891783
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: fc7a6aaa4618e5b44afc29bb281ec7e9, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ae0565929876a0b4f85b6eb4a8153e41, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
