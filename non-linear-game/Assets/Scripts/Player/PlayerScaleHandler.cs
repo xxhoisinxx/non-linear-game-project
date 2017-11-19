@@ -5,6 +5,7 @@
     using log4net;
 
     using UniRx;
+    using UniRx.Triggers;
 
     using UnityEngine;
 
@@ -48,7 +49,9 @@
         }
 
         public void OnNext(long value) {
-            var newScale = Vector3.Distance(
+            Vector3 newScale;
+            try {
+                newScale = Vector3.Distance(
                                new Vector3(
                                    0,
                                    0,
@@ -56,6 +59,12 @@
                                new Vector3(0, 0, this.transform.position.z))
                            / this.defaultZDistance.Value
                            * this.defaultScale.Value;
+            }
+            catch (MissingReferenceException e) {
+                Log.Warn("Missing reference to camera", e);
+                return;
+            }
+
             this.transform.localScale = Vector3.Lerp(
                 this.transform.localScale,
                 newScale,

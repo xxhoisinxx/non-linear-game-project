@@ -1,6 +1,9 @@
 ﻿namespace Player {
     using System;
     using System.Collections.Generic;
+    using System.Reflection;
+
+    using log4net;
 
     using UniRx;
 
@@ -12,6 +15,12 @@
     ///     Represents a facade for the player.
     /// </summary>
     public class PlayerFacade : MonoBehaviour, IDisposable {
+        /// <summary>
+        ///     The logger for this class.
+        /// </summary>
+        private static readonly ILog Log =
+            LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
         /// <summary>
         ///     The player model.
         /// </summary>
@@ -75,6 +84,10 @@
                     .Subscribe(this.movementHandler));
             this.observers.AddLast(Observable.EveryUpdate().Subscribe(
                 this.scaleHandler));
+        }
+
+        private void OnDestroy() {
+            this.Dispose();
         }
     }
 }

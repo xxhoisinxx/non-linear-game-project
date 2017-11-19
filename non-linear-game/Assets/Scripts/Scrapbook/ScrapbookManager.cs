@@ -177,36 +177,5 @@
                 this.disposableActionListeners.RemoveLast();
             }
         }
-
-        /// <summary>
-        /// The settings for this class.
-        /// </summary>
-        [Serializable]
-        internal class Settings {
-            /// <summary>
-            /// The database name.
-            /// </summary>
-            [SerializeField]
-            private StringReactiveProperty databaseName;
-
-            [SerializeField]
-            private Button loadSceneButton;
-
-            /// <summary>
-            /// Gets the name of the database.
-            /// </summary>
-            internal StringReactiveProperty DatabaseName {
-                get {
-                    return this.databaseName;
-                }
-            }
-
-            internal Button LoadSceneButton {
-                get {
-                    return this.loadSceneButton;
-                }
-            }
-        }
-
     }
 }
