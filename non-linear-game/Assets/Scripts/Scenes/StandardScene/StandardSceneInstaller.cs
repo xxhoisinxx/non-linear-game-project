@@ -23,6 +23,8 @@
                 new Tuple<Button, string>(
                     this.settings.LoadScrapbookSceneButton,
                     this.settings.ScrapbookSceneName));
+            this.Container.Bind<Camera>()
+                .FromInstance(this.settings.MainCamera);
         }
 
         [Serializable]
@@ -33,6 +35,9 @@
             [SerializeField]
             private string scrapbookSceneName;
 
+            [SerializeField]
+            private Camera mainCamera;
+
             internal Button LoadScrapbookSceneButton {
                 get {
                     return this.loadScrapbookSceneButton;
@@ -42,6 +47,12 @@
             internal string ScrapbookSceneName {
                 get {
                     return this.scrapbookSceneName;
+                }
+            }
+
+            internal Camera MainCamera {
+                get {
+                    return this.mainCamera;
                 }
             }
         }

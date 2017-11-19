@@ -1,10 +1,9 @@
 ﻿namespace Scenes.Props {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     using log4net;
-
-    using ModestTree;
 
     using UniRx;
     using UniRx.Triggers;
@@ -77,17 +76,27 @@
         protected void Start() {
             this.observers.AddLast(
                 this.collider.OnMouseEnterAsObservable().Subscribe(
-                    _ => { this.spriteRenderer.enabled = true; }));
+                    _ => {
+                        this.spriteRenderer.enabled = true;
+                        Log.InfoFormat(
+                            "Sprite renderer activated\nGameobject: {0}",
+                            this.spriteRenderer.name);
+                    }));
             this.observers.AddLast(
                 this.collider.OnMouseExitAsObservable().Subscribe(
-                    _ => { this.spriteRenderer.enabled = false; }));
+                    _ => {
+                        this.spriteRenderer.enabled = false;
+                        Log.InfoFormat(
+                            "Sprite renderer deactivated\nGameobject: {0}",
+                            this.spriteRenderer.name);
+                    }));
         }
 
         /// <summary>
         ///     Releases unmanaged resources.
         /// </summary>
         private void ReleaseUnmanagedResources() {
-            while (!this.observers.IsEmpty()) {
+            while (this.observers.Any()) {
                 this.observers.Last.Value.Dispose();
                 this.observers.RemoveLast();
             }

@@ -1,6 +1,8 @@
 ﻿namespace Player {
     using System;
 
+    using UniRx;
+
     using UnityEngine;
 
     using Zenject;
@@ -10,19 +12,42 @@
     /// </summary>
     public class Player : IInitializable {
         /// <summary>
-        /// The movement settings.
+        /// Initializes a new instance of the <see cref="Player"/> class.
         /// </summary>
+        /// <param name="movementSettings">
+        /// The movement settings.
+        /// </param>
+        /// <param name="componentSettings">
+        /// The component settings.
+        /// </param>
         [Inject]
-        private Settings.Movement movementSettings;
+        internal Player(
+            Settings.Movement movementSettings,
+            Settings.Components componentSettings) {
+            this.MovementSpeed = movementSettings.Speed;
+            this.Transform = componentSettings.Transform;
+            this.RigidBody = componentSettings.RigidBody;
+        }
 
-        [Inject]
-        private Settings.Components componentSettings;
+        /// <summary>
+        /// Gets or sets the movement speed.
+        /// </summary>
+        public FloatReactiveProperty MovementSpeed { get; set; }
+
+        /// <summary>
+        /// Gets the rigid body.
+        /// </summary>
+        public Rigidbody RigidBody { get; }
+
+        /// <summary>
+        /// Gets the transform.
+        /// </summary>
+        public Transform Transform { get; }
 
         /// <summary>
         /// The initialize.
         /// </summary>
-        public void Initialize() {
-        }
+        public void Initialize() { }
 
         /// <summary>
         /// The settings.
@@ -47,28 +72,20 @@
                 private Transform transform;
 
                 /// <summary>
-                /// Gets or sets the rigid body.
+                /// Gets the rigid body.
                 /// </summary>
                 internal Rigidbody RigidBody {
                     get {
                         return this.rigidBody;
                     }
-
-                    set {
-                        this.rigidBody = value;
-                    }
                 }
 
                 /// <summary>
-                /// Gets or sets the transform.
+                /// Gets the transform.
                 /// </summary>
                 internal Transform Transform {
                     get {
                         return this.transform;
-                    }
-
-                    set {
-                        this.transform = value;
                     }
                 }
             }
@@ -82,18 +99,26 @@
                 /// The speed.
                 /// </summary>
                 [SerializeField]
-                private float speed;
+                private FloatReactiveProperty speed;
+
+                [SerializeField]
+                private IntReactiveProperty raycastLayer;
 
                 /// <summary>
                 /// Gets or sets the speed.
                 /// </summary>
-                internal float Speed {
+                internal FloatReactiveProperty Speed {
                     get {
                         return this.speed;
                     }
+                }
 
-                    set {
-                        this.speed = value;
+                /// <summary>
+                /// Gets the raycast layer.
+                /// </summary>
+                internal IntReactiveProperty RaycastLayer {
+                    get {
+                        return this.raycastLayer;
                     }
                 }
             }

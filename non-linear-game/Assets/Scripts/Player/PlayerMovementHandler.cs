@@ -1,6 +1,10 @@
 ﻿namespace Player {
     using System;
-    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+
+    using log4net;
 
     using UniRx;
 
@@ -9,102 +13,206 @@
     using Zenject;
 
     /// <summary>
-    /// The player movement handler.
+    ///     The player movement handler.
     /// </summary>
-    public class PlayerMovementHandler : IInitializable, IFixedTickable, IDisposable {
+    public class PlayerMovementHandler : UniRx.IObserver<long>, IDisposable {
         /// <summary>
-        /// The rigid body.
+        ///     The logger for this class.
         /// </summary>
-        [Inject]
-        private Player.Settings.Components componentSettings;
+        private static readonly ILog Log =
+            LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
-        /// The movement settings.
+        ///     The camera.
         /// </summary>
-        [Inject]
-        private Player.Settings.Movement movementSettings;
+        private readonly Camera camera;
 
         /// <summary>
-        /// The movement coroutine.
+        ///     The movement speed.
         /// </summary>
-        private IDisposable movementCoroutine;
+        private readonly FloatReactiveProperty movementSpeed;
 
         /// <summary>
-        /// The last hit.
+        ///     The observers.
         /// </summary>
-        private RaycastHit lastHit;
+        private readonly LinkedList<IDisposable> observers;
 
         /// <summary>
-        /// The starting camera distance.
+        ///     The raycast layer as displayed in the Unity Editor.
         /// </summary>
-        private float startingCameraDistance;
-
-        private float startingYPosition;
+        private readonly IntReactiveProperty raycastLayer;
 
         /// <summary>
-        /// The initialize.
+        /// The transform.
         /// </summary>
-        public void Initialize() {
-            this.startingCameraDistance = Mathf.Abs(
-                this.componentSettings.Transform.position.z - Camera.main.transform.position.z);
-            this.startingYPosition = this.componentSettings.Transform.position.y;
-        }
+        private readonly Transform transform;
 
         /// <summary>
-        /// The fixed tick.
+        ///     Initializes a new instance of the <see cref="PlayerMovementHandler" /> class.
         /// </summary>
-        public void FixedTick() {
-            var dir = (this.lastHit.point - Camera.main.transform.position).normalized;
-            Debug.DrawRay(
-                Camera.main.transform.position,
-                dir * Vector3.Distance(Camera.main.transform.position, this.lastHit.point),
-                Color.red);
-            if (!Input.GetMouseButtonDown(0)) {
-                return;
-            }
-            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (!Physics.Raycast(ray, out this.lastHit, 100.0f, 1 << 8)) {
-                return;
-            }
-            this.movementCoroutine?.Dispose();
-            this.movementCoroutine = this.MoveTo(this.lastHit.point, 0.25f).ToObservable().Subscribe();
-        }
-
-        /// <summary>
-        /// The move to.
-        /// </summary>
-        /// <param name="target">
-        /// The target.
+        /// <param name="camera">
+        ///     The camera.
         /// </param>
-        /// <param name="minimumDistance">
-        /// The minimum distance.
+        /// <param name="movementSettings">
+        ///     The movement settings.
         /// </param>
-        /// <returns>
-        /// The <see cref="IEnumerator"/>.
-        /// </returns>
-        private IEnumerator MoveTo(Vector3 target, float minimumDistance) {
-            while (Vector3.Distance(this.componentSettings.Transform.position, target) > minimumDistance) {
-                var cameraPlayerDist = Mathf.Abs(
-                    this.componentSettings.Transform.position.z - Camera.main.transform.position.z);
-                var distanceScaleRatio = cameraPlayerDist / this.startingCameraDistance;
-                this.componentSettings.Transform.localScale = new Vector3(
-                    distanceScaleRatio,
-                    distanceScaleRatio,
-                    distanceScaleRatio);
-                this.componentSettings.Transform.position = Vector3.MoveTowards(
-                    this.componentSettings.Transform.position,
-                    new Vector3(target.x, 0.01f, target.z),
-                    this.movementSettings.Speed * Time.deltaTime);
-                yield return new WaitForFixedUpdate();
-            }
-            yield break;
+        /// <param name="componentSettings">
+        ///     The component settings.
+        /// </param>
+        [Inject]
+        internal PlayerMovementHandler(
+                Camera camera,
+                Player.Settings.Movement movementSettings,
+                Player.Settings.Components componentSettings) {
+            this.camera = camera;
+            this.movementSpeed = movementSettings.Speed;
+            this.raycastLayer = movementSettings.RaycastLayer;
+            this.transform = componentSettings.Transform;
+            this.observers = new LinkedList<IDisposable>();
         }
 
         /// <summary>
-        /// The dispose.
+        /// Finalizes an instance of the <see cref="PlayerMovementHandler"/> class.
         /// </summary>
+        ~PlayerMovementHandler() {
+            this.Dispose(false);
+        }
+
+        /// <summary>
+        ///     Gets the raycast layer.
+        /// </summary>
+        public int RaycastLayer {
+            get {
+                return 1 << this.raycastLayer.Value;
+            }
+        }
+
+        /// <inheritdoc />
         public void Dispose() {
-            this.movementCoroutine?.Dispose();
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        ///     Dispose observers when complete.
+        /// </summary>
+        public void OnCompleted() {
+            Log.InfoFormat(
+                "Completed handling player movement\nGameobject: {0}",
+                this.transform.name);
+            this.DisposeObservers();
+        }
+
+        /// <summary>
+        ///     Logs the error.
+        /// </summary>
+        /// <param name="error">
+        ///     The error.
+        /// </param>
+        public void OnError(Exception error) {
+            Log.WarnFormat(
+                "Error handling player movement\nGameobject: {0}",
+                this.transform.name);
+        }
+
+        /// <summary>
+        ///     Moves the gameobject.
+        /// </summary>
+        /// <param name="value">
+        ///     The time since this method was last called.
+        /// </param>
+        public void OnNext(long value) {
+            this.DisposeObservers();
+            var mouseToCharRay =
+                this.camera.ScreenPointToRay(Input.mousePosition);
+            var charToScreenRay =
+                this.camera.WorldToScreenPoint(this.transform.position);
+
+            // Only raycast on the first fixed update.
+            var isRaycast = false;
+            var hit = new RaycastHit();
+            float speedMulti = 0;
+            this.observers.AddLast(
+                Observable.EveryFixedUpdate().Subscribe(
+                    _ => {
+                        if (!isRaycast) {
+                            if (!Physics.Raycast(
+                                    mouseToCharRay,
+                                    out hit,
+                                    100.0f,
+                                    this.RaycastLayer)) {
+                                this.DisposeObservers();
+                                return;
+                            }
+
+                            isRaycast = true;
+                            var screenDistance = Vector3.Distance(
+                                Input.mousePosition,
+                                charToScreenRay);
+                            var time =
+                                screenDistance / this.movementSpeed.Value;
+                            var worldDistance = Vector3.Distance(
+                                hit.point,
+                                this.transform.position);
+                            speedMulti = worldDistance / time;
+                        }
+
+                        this.transform.position = Vector3.MoveTowards(
+                            this.transform.position,
+                            new Vector3(
+                                hit.point.x,
+                                Mathf.Epsilon,
+                                hit.point.z),
+                            speedMulti * Time.deltaTime);
+                        if (Vector3.Distance(hit.point, this.transform.position)
+                                <= 0.01) {
+                            this.DisposeObservers();
+                        }
+                    }));
+        }
+
+        /// <summary>
+        ///     Performs application-defined tasks associated with freeing,
+        ///     releasing, or resetting unmanaged resources.
+        /// </summary>
+        /// <param name="isDisposing">
+        ///     Specifies whether this is being called by the
+        ///      <see cref="Dispose"/> method.
+        /// </param>
+        protected virtual void Dispose(bool isDisposing) {
+            if (!isDisposing) {
+                return;
+            }
+
+            this.movementSpeed?.Dispose();
+            this.raycastLayer?.Dispose();
+            this.DisposeObservers();
+        }
+
+        /// <summary>
+        ///     Disposes all observers.
+        /// </summary>
+        private void DisposeObservers() {
+            while (this.observers.Any()) {
+                this.observers.Last.Value.Dispose();
+                this.observers.RemoveLast();
+            }
+        }
+
+        /// <summary>
+        ///     Represents a memory pool for the
+        ///     <see cref="PlayerMovementHandler" /> class.
+        /// </summary>
+        public class Pool : MemoryPool<PlayerMovementHandler> {
+            /// <summary>
+            ///     Re-initializes the handler.
+            /// </summary>
+            /// <param name="item">
+            ///     The handler.
+            /// </param>
+            protected override void Reinitialize(PlayerMovementHandler item) {
+                item.DisposeObservers();
+            }
         }
     }
 }

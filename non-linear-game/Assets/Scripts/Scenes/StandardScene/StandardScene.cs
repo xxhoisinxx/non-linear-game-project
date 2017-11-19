@@ -22,9 +22,6 @@
                 Tuple<Button, string> scrapBookButton) {
             this.loadSceneButtonFactory = buttonFactory;
             this.loadScrapBookSceneButton = scrapBookButton;
-        }
-
-        protected void Awake() {
             this.loadSceneButtonFactory.Spawn(
                 this.loadScrapBookSceneButton.Item1,
                 this.loadScrapBookSceneButton.Item2);

@@ -441,6 +441,16 @@ Prefab:
       propertyPath: m_SortingLayer
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114870619711528308, guid: 0101910bdd54d2246b0539e2dd827f0f,
+        type: 2}
+      propertyPath: movementSettings.speed.value
+      value: 250
+      objectReference: {fileID: 0}
+    - target: {fileID: 114870619711528308, guid: 0101910bdd54d2246b0539e2dd827f0f,
+        type: 2}
+      propertyPath: movementSettings.raycastLayer.value
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0101910bdd54d2246b0539e2dd827f0f, type: 2}
   m_IsPrefabParent: 0
@@ -664,6 +674,11 @@ Prefab:
       propertyPath: settings.scrapbookSceneName
       value: vuforia
       objectReference: {fileID: 0}
+    - target: {fileID: 114328339361231636, guid: 5ed3d4965cd925d40ae0882ce4637e91,
+        type: 2}
+      propertyPath: settings.mainCamera
+      value: 
+      objectReference: {fileID: 1043065496}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5ed3d4965cd925d40ae0882ce4637e91, type: 2}
   m_IsPrefabParent: 0
