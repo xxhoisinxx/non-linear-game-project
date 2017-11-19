@@ -9,10 +9,13 @@ namespace Project {
 
     using Logging;
 
+    using Player;
+
     using SceneLoadedHandlers;
 
     using Scrapbook;
 
+    using UnityEngine;
     using UnityEngine.SceneManagement;
 
     using Vuforia;
@@ -26,6 +29,9 @@ namespace Project {
         /// </summary>
         private static readonly ILog Log = log4net.LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        [SerializeField]
+        private Settings settings;
 
         /// <summary>
         /// Installs the bindings for this project.
@@ -51,8 +57,23 @@ namespace Project {
                 .BindMemoryPool<LoadSceneButtonHandler,
                     // ReSharper disable once StyleCop.SA1110
                     LoadSceneButtonHandler.Pool>();
+            this.Container.BindMemoryPool<PlayerFacade, PlayerFacade.Pool>()
+                .FromSubContainerResolve()
+                .ByNewPrefab(this.settings.PlayerPrefab);
             Log.Info("[Success] Project bindings installed");
 /*            ((log4net.Repository.Hierarchy.Logger)log.Logger).Level = log4net.Core.Level.Debug;*/
         }
-   }
+
+        [Serializable]
+        public class Settings {
+            [SerializeField]
+            private GameObject playerPrefab;
+
+            public GameObject PlayerPrefab {
+                get {
+                    return this.playerPrefab;
+                }
+            }
+        }
+    }
 }

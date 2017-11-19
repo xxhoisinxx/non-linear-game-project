@@ -18,7 +18,8 @@
         private static readonly ILog Log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly Camera camera;
+        [InjectOptional]
+        private Camera camera;
 
         private readonly Vector3ReactiveProperty defaultScale;
 
@@ -31,13 +32,11 @@
 
         [Inject]
         internal PlayerScaleHandler(
-                Camera camera,
                 PlayerInstaller.Settings.Components componentSettings,
                 PlayerInstaller.Settings.Scale scaleSettings) {
             this.transform = componentSettings.Transform;
             this.defaultZDistance = scaleSettings.DefaultZDistance;
             this.defaultScale = scaleSettings.DefaultScale;
-            this.camera = camera;
         }
 
         public void OnCompleted() {
@@ -71,6 +70,18 @@
                 Time.timeScale);
         }
 
-        public class Pool : MemoryPool<PlayerScaleHandler> { }
+        public class Pool : MemoryPool<Camera, PlayerScaleHandler> {
+            /// <summary>
+            ///     Re-initializes the handler.
+            /// </summary>
+            /// <param name="item">
+            ///     The handler.
+            /// </param>
+            protected override void Reinitialize(
+                Camera camera,
+                PlayerScaleHandler item) {
+                item.camera = camera;
+            }
+        }
     }
 }

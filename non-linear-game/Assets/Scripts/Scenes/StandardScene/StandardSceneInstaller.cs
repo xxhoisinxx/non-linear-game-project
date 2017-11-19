@@ -1,7 +1,12 @@
 ﻿namespace Scenes.StandardScene {
     using System;
+    using System.Reflection;
 
     using ButtonClickHandler;
+
+    using log4net;
+
+    using Player;
 
     using UnityEngine;
     using UnityEngine.UI;
@@ -12,9 +17,14 @@
     ///     Represents a dependency injector for a standard scene.
     /// </summary>
     public class StandardSceneInstaller : MonoInstaller {
+        /// <summary>
+        ///     The logger for this class.
+        /// </summary>
+        private static readonly ILog Log =
+            LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
         [SerializeField]
         private Settings settings;
-
         /// <summary>
         ///     Installs the bindings for this scene.
         /// </summary>
@@ -37,6 +47,15 @@
 
             [SerializeField]
             private Camera mainCamera;
+
+            [SerializeField]
+            private GameObject playerPrefab;
+
+            public GameObject PlayerPrefab {
+                get {
+                    return this.playerPrefab;
+                }
+            }
 
             internal Button LoadScrapbookSceneButton {
                 get {

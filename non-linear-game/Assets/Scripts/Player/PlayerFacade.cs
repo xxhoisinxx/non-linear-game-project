@@ -14,7 +14,7 @@
     /// <summary>
     ///     Represents a facade for the player.
     /// </summary>
-    public class PlayerFacade : MonoBehaviour, IDisposable {
+    public class PlayerFacade : MonoBehaviour {
         /// <summary>
         ///     The logger for this class.
         /// </summary>
@@ -64,30 +64,30 @@
             this.scaleHandlerFactory = scaleHandlerFactory;
 
             this.model = model;
-            this.movementHandler = this.movementHandlerFactory.Spawn();
-            this.scaleHandler = this.scaleHandlerFactory.Spawn();
         }
 
-        /// <inheritdoc />
-        public void Dispose() {
-            this.movementHandler?.Dispose();
-            foreach (var o in this.observers) {
-                o.Dispose();
+        public class Pool : MonoMemoryPool<Camera, PlayerFacade> {
+            protected override void Reinitialize(
+                    Camera camera,
+                    PlayerFacade item) {
+                item.movementHandler = item.movementHandlerFactory.Spawn(camera);
+                item.scaleHandler = item.scaleHandlerFactory.Spawn(camera);
+                item.observers.AddLast(
+                    Observable.EveryUpdate().Where(_ => Input.GetMouseButtonDown(0))
+                        .Subscribe(item.movementHandler));
+                item.observers.AddLast(Observable.EveryUpdate().Subscribe(
+                    item.scaleHandler));
             }
-            this.movementHandlerFactory.Despawn(this.movementHandler);
-            this.scaleHandlerFactory.Despawn(this.scaleHandler);
-        }
 
-        protected void Start() {
-            this.observers.AddLast(
-                Observable.EveryUpdate().Where(_ => Input.GetMouseButtonDown(0))
-                    .Subscribe(this.movementHandler));
-            this.observers.AddLast(Observable.EveryUpdate().Subscribe(
-                this.scaleHandler));
-        }
-
-        private void OnDestroy() {
-            this.Dispose();
+            protected override void OnDespawned(PlayerFacade item) {
+                item.gameObject.SetActive(false);
+                item.movementHandler?.Dispose();
+                foreach (var o in item.observers) {
+                    o.Dispose();
+                }
+                item.movementHandlerFactory.Despawn(item.movementHandler);
+                item.scaleHandlerFactory.Despawn(item.scaleHandler);
+            }
         }
     }
 }

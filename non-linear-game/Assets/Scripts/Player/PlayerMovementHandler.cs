@@ -25,7 +25,8 @@
         /// <summary>
         ///     The camera.
         /// </summary>
-        private readonly Camera camera;
+        [InjectOptional]
+        private Camera camera;
 
         /// <summary>
         ///     The movement speed.
@@ -61,10 +62,8 @@
         /// </param>
         [Inject]
         internal PlayerMovementHandler(
-                Camera camera,
                 PlayerInstaller.Settings.Movement movementSettings,
                 PlayerInstaller.Settings.Components componentSettings) {
-            this.camera = camera;
             this.movementSpeed = movementSettings.Speed;
             this.raycastLayer = movementSettings.RaycastLayer;
             this.transform = componentSettings.Transform;
@@ -181,14 +180,20 @@
         ///     Represents a memory pool for the
         ///     <see cref="PlayerMovementHandler" /> class.
         /// </summary>
-        public class Pool : MemoryPool<PlayerMovementHandler> {
+        public class Pool : MemoryPool<Camera, PlayerMovementHandler> {
             /// <summary>
             ///     Re-initializes the handler.
             /// </summary>
             /// <param name="item">
             ///     The handler.
             /// </param>
-            protected override void Reinitialize(PlayerMovementHandler item) {
+            protected override void Reinitialize(
+                    Camera camera,
+                    PlayerMovementHandler item) {
+                item.camera = camera;
+            }
+
+            protected override void OnDespawned(PlayerMovementHandler item) {
                 item.DisposeObservers();
             }
         }
