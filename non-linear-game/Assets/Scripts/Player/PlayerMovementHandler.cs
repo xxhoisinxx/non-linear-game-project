@@ -129,7 +129,9 @@
             this.observers.AddLast(
                 Observable.EveryFixedUpdate().Subscribe(
                     _ => {
-                        if (!isRaycast) {
+                        if (!isRaycast
+                            && this.camera.pixelRect.Contains(
+                                Input.mousePosition)) {
                             if (!Physics.Raycast(
                                     mouseToCharRay,
                                     out hit,
